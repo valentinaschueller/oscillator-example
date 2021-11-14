@@ -7,6 +7,12 @@ class MonolithicSystem:
         self.A = np.array([[-2., 1.],[1., -2.]])
         self.M = np.eye(2, 2, dtype=float)
         self.K = self.A
+        self.first_order_A = np.array(
+            [[0., 0., 1., 0.],
+            [0., 0., 0., 1.],
+            [-2., 1., 0., 0.],
+            [1., -2., 0., 0.]]
+        )
     
     def force(self, t):
         del t # no time-dependent force for this system
@@ -30,7 +36,12 @@ class MonolithicSystem:
 
     def numerical_solution(self, t_end: float, N: int, solver: TimesteppingMethod):
         dt = t_end/N
-        result = np.zeros((6, N+1))
-        result[:,0] = self._initial_conditions()
-        solver.integrate(dt, N, result)
+        try:
+            result = np.zeros((6, N+1))
+            result[:,0] = self._initial_conditions()
+            solver.integrate(dt, N, result)
+        except ValueError:
+            result = np.zeros((4, N+1))
+            result[:,0] = self._initial_conditions()[:4]
+            solver.integrate(dt, N, result)
         return result
