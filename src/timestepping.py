@@ -76,3 +76,66 @@ class NewmarkBeta(TimesteppingMethod):
         v_next = v_n + dt * ((1 - self.gamma) * a_n + self.gamma * a_next)
 
         return np.concatenate([u_next, v_next, a_next])
+
+
+class ERK(TimesteppingMethod):
+    def __init__(self, first_order_matrix: np.ndarray, order: int = 1):
+        self.first_order_matrix = first_order_matrix
+        if order == 1:
+            self.erk_step = self._erk1
+        elif order == 2:
+            self.erk_step = self._erk2
+        elif order == 4:
+            self.erk_step = self._erk4
+        else:
+            raise NotImplementedError(f"Currently only supports order 1,2,4, not {order}!")
+        
+    
+    def compute_timestep(self, dt: float, t_n: float, last_values: np.ndarray):
+        next_values = self.erk_step(last_values, dt, t_n)
+        return next_values
+
+    def du_dt(self, last_values: np.ndarray, t_n: float) -> np.ndarray:
+        del t_n
+        return np.dot(self.first_order_matrix, last_values)
+
+    def _erk1(self, u_i: np.ndarray, dt: float, t_i = 0) -> np.ndarray:
+        """Explicit Euler method"""
+        A = np.array([0])
+        b = np.array([0])
+        c = np.array([1])
+        u_next = self._erk_gen(A, b, c, u_i, dt, t_i)
+        return u_next
+
+    def _erk2(self, u_i: np.ndarray, dt: float, t_i = None) -> np.ndarray:
+        """Method of Heun (2nd order accurate)"""
+        A = np.array([[0,0],[1,0]])
+        b = np.array([0,1])
+        c = np.array([0.5, 0.5])
+        u_next = self._erk_gen(A, b, c, u_i, dt, t_i)
+        return u_next
+
+    def _erk4(self, u_i: np.ndarray, dt: float, t_i = None) -> np.ndarray:
+        """RK4 scheme"""
+        A = np.zeros((4,4), dtype=float)
+        A[1,0] = 0.5
+        A[2,1] = 0.5
+        A[3,2] = 1
+        b = np.array([0,.5,.5,1])
+        c = np.array([1/6, 1/3, 1/3, 1/6])
+        u_next = self._erk_gen(A, b, c, u_i, dt, t_i)
+        return u_next
+    
+    def _erk_gen(self, A: np.ndarray, b, c, u_i: np.ndarray, dt: float, t_i: float) -> np.ndarray:
+        k = np.zeros(b.shape + u_i.shape, dtype=u_i.dtype)
+        k[0] = self.du_dt(u_i, t_i)
+        if len(b) > 1:
+            for i in range(1, len(b)):
+                u_eval = u_i + dt * np.tensordot(A[i], k, axes=1)
+                t_eval = t_i + b[i] * dt
+                try:
+                    k[i] = self.du_dt(u_eval, t_eval)
+                except ValueError:
+                    k[i] = self.du_dt(u_eval, t_eval)[i]
+        u_next = u_i + dt * np.tensordot(c, k, axes=1)
+        return u_next
