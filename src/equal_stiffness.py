@@ -19,14 +19,14 @@ def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
     newmark_gamma = 0.5
     newmark_beta = 0.25
     if solver_str == "newmark":
-        solver = NewmarkBeta(ode_system.A, newmark_beta, newmark_gamma)
+        solver = NewmarkBeta(ode_system.A_second_order, newmark_beta, newmark_gamma)
     elif solver_str == "alpha":
         solver = GeneralizedAlpha(
-            ode_system.A, ode_system.M, ode_system.K, 
+            ode_system.A_second_order, ode_system.M, ode_system.K, 
             beta, gamma, alpha_f, alpha_m, 
             ode_system.force)
     else:
-        solver = ERK(ode_system.first_order_A, 4)
+        solver = ERK(ode_system.A_first_order, 4)
 
     #t = np.linspace(0., t_stop, N+1)
     
@@ -102,10 +102,10 @@ def create_solution_plots(t, sol, dir_name: str ="plots"):
 
 if __name__ == '__main__':
     # N = 100
-    # t_stop = 5
-    # true_sol, num_sol = run_simulation(t_stop, N, "alpha")
+    # t_stop = 20
+    # true_sol, num_sol = run_simulation(t_stop, N, "erk")
     # t = np.linspace(0., t_stop, N+1)
-    # create_solution_plots(t, num_sol, "alpha_plots")
+    # create_solution_plots(t, num_sol, "erk_plots")
     # create_solution_plots(t, true_sol)
     
     t_stop = 20

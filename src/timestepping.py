@@ -16,13 +16,15 @@ class TimesteppingMethod(ABC):
 
 class GeneralizedAlpha(TimesteppingMethod):
     def __init__(self,
-                A: np.ndarray, M: np.ndarray, K: np.ndarray, 
+                A_second_order: np.ndarray, M: np.ndarray, K: np.ndarray, 
                 beta: float, gamma: float,
                 alpha_f: float, alpha_m: float,
                 F: callable):
-        self.A = A
+        # for the formulation: u'' =  Au:
+        self.A = A_second_order
+        # for the formulation: Mu'' + Ku = 0:
         self.M = M
-        self.K = -K
+        self.K = K
         self.beta = beta
         self.gamma = gamma
         self.alpha_f = alpha_f
@@ -33,7 +35,7 @@ class GeneralizedAlpha(TimesteppingMethod):
         u_n = last_values[[0, 1]]
         v_n = last_values[[2, 3]]
         a_n = last_values[[4, 5]]
-        force = self.F(t_n + (1 - self.alpha_f) * dt)
+        force = self.F(t_n) + (1 - self.alpha_f) * self.F(t_n + dt)
 
         # solve for u_next
         m1 = (1 - self.alpha_m) / (self.beta * dt**2)
@@ -80,6 +82,7 @@ class NewmarkBeta(TimesteppingMethod):
 
 class ERK(TimesteppingMethod):
     def __init__(self, first_order_matrix: np.ndarray, order: int = 1):
+        # for the formulation: y' = Ay:
         self.first_order_matrix = first_order_matrix
         if order == 1:
             self.erk_step = self._erk1

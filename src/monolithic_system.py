@@ -4,10 +4,13 @@ from timestepping import TimesteppingMethod
 
 class MonolithicSystem:
     def __init__(self):
-        self.A = np.array([[-2., 1.],[1., -2.]])
+        # for the formulation: u'' = A_second_order * u:
+        self.A_second_order = np.array([[-2., 1.],[1., -2.]])
+        # for the formulation: Mu'' + Ku = 0:
         self.M = np.eye(2, 2, dtype=float)
-        self.K = self.A
-        self.first_order_A = np.array(
+        self.K = - self.A_second_order.copy()
+        # for the formulation: y' = A_first_order * y:
+        self.A_first_order = np.array(
             [[0., 0., 1., 0.],
             [0., 0., 0., 1.],
             [-2., 1., 0., 0.],
@@ -21,7 +24,7 @@ class MonolithicSystem:
     def _initial_conditions(self):
         u0 = np.array([1., 0.])
         v0 = np.array([0., 0.])
-        a0 = np.dot(self.A, u0)
+        a0 = np.dot(self.A_second_order, u0)
         return np.concatenate([u0, v0, a0])
 
     def analytical_solution(self, t_end: float, N: int):
