@@ -47,38 +47,19 @@ class GeneralizedAlpha(TimesteppingMethod):
         u_next = np.linalg.solve(system_matrix, rhs)
 
         # compute a_next
-        a_next = np.dot(self.A, u_next)
+        a_next = 1.0 / (self.beta * dt ** 2) * (u_next - u_n - dt * v_n) - (1 - 2 * self.beta) / (2 * self.beta) * a_n
 
         # compute v_next
         v_next = v_n + dt * ((1 - self.gamma) * a_n + self.gamma * a_next)
 
         return np.concatenate([u_next, v_next, a_next])
 
-class NewmarkBeta(TimesteppingMethod):
-    def __init__(self, A: np.ndarray, beta: float, gamma: float):
-        self.A = A
-        self.beta = beta
-        self.gamma = gamma
-    
-    def compute_timestep(self, dt: float, t_n: float, last_values: np.ndarray):
-        del t_n
-        u_n = last_values[[0, 1]]
-        v_n = last_values[[2, 3]]
-        a_n = last_values[[4, 5]]
-
-        # solve for u_next
-        M = np.eye(2, 2) - dt**2 * self.beta * self.A
-        rhs = u_n + dt * v_n + dt**2 * (0.5 - self.beta) * a_n
-        u_next = np.linalg.solve(M, rhs)
-
-        # compute a_next
-        a_next = np.dot(self.A, u_next)
-
-        # compute v_next
-        v_next = v_n + dt * ((1 - self.gamma) * a_n + self.gamma * a_next)
-
-        return np.concatenate([u_next, v_next, a_next])
-
+class NewmarkBeta(GeneralizedAlpha):
+    def __init__(self,
+                A_second_order: np.ndarray, M: np.ndarray, K: np.ndarray, 
+                beta: float, gamma: float,
+                F: callable):
+        super().__init__(A_second_order, M, K, beta, gamma, 0.0, 0.0, F)
 
 class ERK(TimesteppingMethod):
     def __init__(self, first_order_matrix: np.ndarray, order: int = 1):
