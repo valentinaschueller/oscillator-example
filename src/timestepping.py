@@ -62,7 +62,11 @@ class NewmarkBeta(GeneralizedAlpha):
         super().__init__(A_second_order, M, K, beta, gamma, 0.0, 0.0, F)
 
 class ERK(TimesteppingMethod):
-    def __init__(self, first_order_matrix: np.ndarray, order: int = 1):
+    def __init__(self, first_order_matrix: np.ndarray, force_function: callable = None, order: int = 1):
+        if not force_function:
+            self.force_function = lambda t : 0 * t
+        else:
+            self.force_function = force_function
         # for the formulation: y' = Ay:
         self.first_order_matrix = first_order_matrix
         if order == 1:
@@ -80,8 +84,7 @@ class ERK(TimesteppingMethod):
         return next_values
 
     def du_dt(self, last_values: np.ndarray, t_n: float) -> np.ndarray:
-        del t_n
-        return np.dot(self.first_order_matrix, last_values)
+        return np.dot(self.first_order_matrix, last_values) + self.force_function(t_n)
 
     def _erk1(self, u_i: np.ndarray, dt: float, t_i = 0) -> np.ndarray:
         """Explicit Euler method"""

@@ -11,22 +11,25 @@ from timestepping import ERK, GeneralizedAlpha, NewmarkBeta
 
 def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
     ode_system = MonolithicSystem()
-
-    alpha_m = 0.3
-    alpha_f = 0.5
-    gamma = 0.5 - alpha_m + alpha_f
-    beta = 0.25 * (gamma + 0.5)**2
-    newmark_gamma = 0.5
-    newmark_beta = 0.25
+    
     if solver_str == "newmark":
-        solver = NewmarkBeta(ode_system.A_second_order, newmark_beta, newmark_gamma)
+        newmark_gamma = 0.5
+        newmark_beta = 0.25
+        solver = NewmarkBeta(
+            ode_system.A_second_order, ode_system.M, ode_system.K, 
+            newmark_beta, newmark_gamma, 
+            ode_system.second_order_force)
     elif solver_str == "alpha":
+        alpha_m = 0.3
+        alpha_f = 0.5
+        gamma = 0.5 - alpha_m + alpha_f
+        beta = 0.25 * (gamma + 0.5)**2
         solver = GeneralizedAlpha(
             ode_system.A_second_order, ode_system.M, ode_system.K, 
             beta, gamma, alpha_f, alpha_m, 
-            ode_system.force)
+            ode_system.second_order_force)
     else:
-        solver = ERK(ode_system.A_first_order, 4)
+        solver = ERK(ode_system.A_first_order, force_function=ode_system.first_order_force , order=4)
 
     #t = np.linspace(0., t_stop, N+1)
     

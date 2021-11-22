@@ -17,9 +17,14 @@ class MonolithicSystem:
             [1., -2., 0., 0.]]
         )
     
-    def force(self, t):
+    def second_order_force(self, t):
         del t # no time-dependent force for this system
         return np.array([0., 0.])
+
+    def first_order_force(self, t):
+        del t # no time-dependent force for this system
+        return np.array([0., 0., 0., 0.])
+
 
     def _initial_conditions(self):
         u0 = np.array([1., 0.])
