@@ -3,7 +3,7 @@ Created on Fri Apr 23 16:14:08 2021
 
 @author: valentina
 """
-
+import numpy as np
 import matplotlib.pyplot as plt
 
 def prepare_plot(title, subtitle, xlabel, ylabel):
@@ -30,3 +30,38 @@ def plot_error_ref(ax, dt):
     ax.loglog(dt, o3, 'k:', label='$\mathcal{O}(\Delta t^3)$', lw=1)
     ax.loglog(dt, o4, 'k-.', label='$\mathcal{O}(\Delta t^4)$', lw=1)
     return ax
+
+def plot_displacements(t, sol, path="."):
+    _, ax = prepare_plot("Displacements", "", "t [s]", "u [m]")
+    ax.plot(t, sol[0,:], label="$u_1$")
+    ax.plot(t, sol[1,:], label="$u_2$")
+    ax.legend()
+    plt.savefig(f"{path}/displacements.png", dpi=300, bbox_inches="tight")
+    plt.close()
+
+def plot_velocities(t, sol, path="."):
+    _, ax = prepare_plot("Velocities", "", "t [s]", "v [m/s]")
+    ax.plot(t, sol[2,:], label="$v_1$")
+    ax.plot(t, sol[3,:], label="$v_2$")
+    ax.legend()
+    plt.savefig(f"{path}/velocities.png", dpi=300, bbox_inches="tight")
+    plt.close()
+
+def plot_energy(t, energy, path="."):
+    _, ax = prepare_plot("Energy", "", "t [s]", "Energy")
+    ax.plot(t, energy, label='energy')
+    ax.legend()
+    plt.savefig(f"{path}/energy.png", dpi=300, bbox_inches="tight")
+    plt.close()
+
+def compute_energy(u1, u2, v1, v2):
+    return v1**2 + v2**2 + u1**2 + u2**2 + (u2-u1)**2
+
+def l1_norm(vec):
+    return np.sum(np.abs(vec))/vec.shape[1]
+
+def l2_norm(vec):
+    return np.sum(vec**2)/vec.shape[1]
+
+def max_norm(vec):
+    return np.max(np.abs(vec))

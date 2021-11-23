@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from utility import prepare_plot, plot_error_ref
+from utility import *
 
 plt.rcParams.update({
     "text.usetex": True,
@@ -45,47 +45,6 @@ def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
 
     return analytical_solution, numerical_solution
 
-
-def compute_energy(solution: np.ndarray):
-    u1 = solution[0,:]
-    u2 = solution[1,:]
-    v1 = solution[2,:]
-    v2 = solution[3,:]
-    return v1**2 + v2**2 + u1**2 + u2**2 + (u2-u1)**2
-
-
-def plot_displacements(t, sol, path="."):
-    _, ax = prepare_plot("Displacements", "", "t [s]", "u [m]")
-    ax.plot(t, sol[0,:], label="$u_1$")
-    ax.plot(t, sol[1,:], label="$u_2$")
-    ax.legend()
-    plt.savefig(f"{path}/displacements.png", dpi=300, bbox_inches="tight")
-    plt.close()
-
-def plot_velocities(t, sol, path="."):
-    _, ax = prepare_plot("Velocities", "", "t [s]", "v [m/s]")
-    ax.plot(t, sol[2,:], label="$v_1$")
-    ax.plot(t, sol[3,:], label="$v_2$")
-    ax.legend()
-    plt.savefig(f"{path}/velocities.png", dpi=300, bbox_inches="tight")
-    plt.close()
-
-def plot_energy(t, energy, path="."):
-    _, ax = prepare_plot("Energy", "", "t [s]", "Energy")
-    ax.plot(t, energy, label='energy')
-    ax.legend()
-    plt.savefig(f"{path}/energy.png", dpi=300, bbox_inches="tight")
-    plt.close()
-
-def l1_norm(vec):
-    return np.sum(np.abs(vec))/vec.shape[1]
-
-def l2_norm(vec):
-    return np.sum(vec**2)/vec.shape[1]
-
-def max_norm(vec):
-    return np.max(np.abs(vec))
-
 def compute_newmark_error(t_stop, N):
     true_sol, num_sol = run_simulation(t_stop, N, solver_str="newmark")
     return true_sol - num_sol[0:4,:]
@@ -104,7 +63,7 @@ def create_solution_plots(t, sol, dir_name: str ="plots"):
         os.mkdir(plotdir_path)
     except FileExistsError:
         pass
-    energy = compute_energy(sol)
+    energy = compute_energy(sol[0,:], sol[1,:], sol[2,:], sol[3,:])
     plot_displacements(t, sol, plotdir_path)
     plot_velocities(t, sol, plotdir_path)
     plot_energy(t, energy, plotdir_path)
