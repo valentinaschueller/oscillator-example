@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 from utility import *
 from timestepping import ERK, GeneralizedAlpha, NewmarkBeta
@@ -128,16 +127,16 @@ class SystemPartition:
             [-2., 0.]]
         )
         self.result = np.zeros(result_shape)
+        self.other_u = self._initial_other_u()
         try:
             self.result[:, 0] = self._initial_conditions()
         except ValueError:
             self.result[:, 0] = self._initial_conditions()[:2]
-        self.other_u = self._initial_other_u()
 
     def second_order_force(self, t):
         del t # no time-dependent force so far
         # k12 * other_u
-        return 1 * self.other_u
+        return self.other_u
 
     def first_order_force(self, t):
         del t # no time-dependent force so far
@@ -150,7 +149,7 @@ class SystemPartition:
         else:
             u0 = np.array([0.])
         v0 = np.array([0.])
-        a0 = np.dot(self.A_second_order, u0)
+        a0 = np.dot(self.A_second_order, u0) + self.second_order_force(0)
         return np.concatenate([u0, v0, a0])
     
     def _initial_other_u(self):
