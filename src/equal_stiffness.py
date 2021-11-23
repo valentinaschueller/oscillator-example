@@ -1,4 +1,3 @@
-import os
 import numpy as np
 import matplotlib.pyplot as plt
 from utility import *
@@ -57,17 +56,6 @@ def compute_erk_error(t_stop, N):
     true_sol, num_sol = run_simulation(t_stop, N, solver_str="erk")
     return true_sol - num_sol[0:4,:]
 
-def create_solution_plots(t, sol, dir_name: str ="plots"):
-    plotdir_path = f"./{dir_name}"
-    try:
-        os.mkdir(plotdir_path)
-    except FileExistsError:
-        pass
-    energy = compute_energy(sol[0,:], sol[1,:], sol[2,:], sol[3,:])
-    plot_displacements(t, sol, plotdir_path)
-    plot_velocities(t, sol, plotdir_path)
-    plot_energy(t, energy, plotdir_path)
-
 if __name__ == '__main__':
     # N = 100
     # t_stop = 20
@@ -79,9 +67,9 @@ if __name__ == '__main__':
     t_stop = 20
     N_list = np.array([500, 1000, 2000, 4000, 8000])
     dt_list = np.array([t_stop / N for N in N_list])
-    l2_errors_newmark = np.array([l1_norm(compute_newmark_error(t_stop, N)) for N in N_list])
-    l2_errors_alpha = np.array([l1_norm(compute_alpha_error(t_stop, N)) for N in N_list])
-    l2_errors_erk = np.array([l1_norm(compute_erk_error(t_stop, N)) for N in N_list])
+    l2_errors_newmark = np.array([l2_norm(compute_newmark_error(t_stop, N)) for N in N_list])
+    l2_errors_alpha = np.array([l2_norm(compute_alpha_error(t_stop, N)) for N in N_list])
+    l2_errors_erk = np.array([l2_norm(compute_erk_error(t_stop, N)) for N in N_list])
 
     title = "Monolithic System: Convergence Plot"
     subtitle = r"$\alpha_m = 0.2, \alpha_f = 0.5$"

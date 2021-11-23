@@ -3,6 +3,7 @@ Created on Fri Apr 23 16:14:08 2021
 
 @author: valentina
 """
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -53,6 +54,17 @@ def plot_energy(t, energy, path="."):
     ax.legend()
     plt.savefig(f"{path}/energy.png", dpi=300, bbox_inches="tight")
     plt.close()
+
+def create_solution_plots(t, sol, dir_name: str ="plots"):
+    plotdir_path = f"./{dir_name}"
+    try:
+        os.mkdir(plotdir_path)
+    except FileExistsError:
+        pass
+    energy = compute_energy(sol[0,:], sol[1,:], sol[2,:], sol[3,:])
+    plot_displacements(t, sol, plotdir_path)
+    plot_velocities(t, sol, plotdir_path)
+    plot_energy(t, energy, plotdir_path)
 
 def compute_energy(u1, u2, v1, v2):
     return v1**2 + v2**2 + u1**2 + u2**2 + (u2-u1)**2
