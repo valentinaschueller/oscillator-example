@@ -32,9 +32,17 @@ class GeneralizedAlpha(TimesteppingMethod):
         self.F = F
 
     def compute_timestep(self, dt: float, t_n: float, last_values: np.ndarray):
-        u_n = last_values[[0, 1]]
-        v_n = last_values[[2, 3]]
-        a_n = last_values[[4, 5]]
+        if last_values.size == 6:
+            u_n = last_values[[0, 1]]
+            v_n = last_values[[2, 3]]
+            a_n = last_values[[4, 5]]
+        elif last_values.size == 3:
+            u_n = last_values[0]
+            v_n = last_values[1]
+            a_n = last_values[2]
+        else:
+            raise ValueError("Unknown shape of last_values?")
+
         force = self.F(t_n) + (1 - self.alpha_f) * self.F(t_n + dt)
 
         # solve for u_next
