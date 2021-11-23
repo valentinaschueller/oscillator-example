@@ -174,12 +174,13 @@ def compute_erk_error(t_stop, N):
     return true_sol - num_sol
 
 if __name__ == '__main__':
+    N = 100
     t_stop = 20
-    N_list = np.array([500, 1000, 2000, 4000, 8000])
-    dt_list = np.array([t_stop / N for N in N_list])
-    l2_errors_newmark = np.array([l1_norm(compute_newmark_error(t_stop, N)) for N in N_list])
-    l2_errors_alpha = np.array([l1_norm(compute_alpha_error(t_stop, N)) for N in N_list])
-    l2_errors_erk = np.array([l1_norm(compute_erk_error(t_stop, N)) for N in N_list])
+    true_sol = analytical_solution(t_stop, N)
+    num_sol = partitioned_generalized_alpha(t_stop, N, 1)
+    t = np.linspace(0., t_stop, N+1)
+    create_solution_plots(t, num_sol, f"partitioned_alpha_{N}")
+    create_solution_plots(t, true_sol, "analytic")
 
     title = "Partitioned System: Convergence Plot"
     subtitle = r"$\alpha_m = 0.5, \alpha_f = 0.5$"
