@@ -4,6 +4,13 @@ import matplotlib.pyplot as plt
 from numpy.core import numeric
 from plotting import prepare_plot, plot_error_ref
 
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "serif",
+    "font.serif": ["Palatino"],
+})
+
+
 from monolithic_system import MonolithicSystem
 from timestepping import ERK, GeneralizedAlpha, NewmarkBeta
 
@@ -20,7 +27,7 @@ def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
             newmark_beta, newmark_gamma, 
             ode_system.second_order_force)
     elif solver_str == "alpha":
-        alpha_m = 0.3
+        alpha_m = 0.2
         alpha_f = 0.5
         gamma = 0.5 - alpha_m + alpha_f
         beta = 0.25 * (gamma + 0.5)**2
@@ -118,14 +125,14 @@ if __name__ == '__main__':
     l2_errors_alpha = np.array([l1_norm(compute_alpha_error(t_stop, N)) for N in N_list])
     l2_errors_erk = np.array([l1_norm(compute_erk_error(t_stop, N)) for N in N_list])
 
-    title = "Errors"
-    subtitle = r"$\alpha_m = 0.3, \alpha_f = 0.5$"
+    title = "Monolithic System: Convergence Plot"
+    subtitle = r"$\alpha_m = 0.2, \alpha_f = 0.5$"
     xlabel = "dt"
     ylabel = r"$\vert\vert e \vert\vert_2$"
     fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     plot_error_ref(ax, dt_list)
-    ax.plot(dt_list, l2_errors_newmark, "o-", label="Newmark errors")
-    ax.plot(dt_list, l2_errors_alpha, "x-", label="Generalized alpha errors")
-    ax.plot(dt_list, l2_errors_erk, "x-", label="ERK4 errors")
+    ax.plot(dt_list, l2_errors_newmark, linestyle="none", marker=".", color="C9", label=r"Newmark $\beta$")
+    ax.plot(dt_list, l2_errors_alpha, linestyle="none", marker="x", color="C6", label=r"Generalized $\alpha$")
+    ax.plot(dt_list, l2_errors_erk, linestyle="none", marker="1", color="C8", label=r"ERK4")
     ax.legend()
-    plt.savefig("convergence_plot_all.png", dpi=300)
+    plt.savefig("convergence_plot_all.png", dpi=300, bbox_inches='tight')
