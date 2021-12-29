@@ -43,7 +43,7 @@ class GeneralizedAlpha(TimesteppingMethod):
         else:
             raise ValueError("Unknown shape of last_values?")
 
-        force = self.F(t_n) + (1 - self.alpha_f) * self.F(t_n + dt)
+        force = self.alpha_f * self.F(t_n) + (1 - self.alpha_f) * self.F(t_n + dt)
 
         # solve for u_next
         m1 = (1 - self.alpha_m) / (self.beta * dt**2)
