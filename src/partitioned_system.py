@@ -148,11 +148,11 @@ if __name__ == '__main__':
     t_stop = 20
     N_list = np.array([500, 1000, 2000, 4000, 8000])
     dt_list = np.array([t_stop / N for N in N_list])
-    l2_errors_newmark = np.array([max_norm(compute_newmark_error(t_stop, N, "cps")) for N in N_list])
-    l2_errors_alpha = np.array([max_norm(compute_alpha_error(t_stop, N, "cps")) for N in N_list])
-    l2_errors_alpha_strang = np.array([max_norm(compute_alpha_error(t_stop, N, "strang")) for N in N_list])
-    l2_errors_erk = np.array([max_norm(compute_erk_error(t_stop, N, "cps")) for N in N_list])
-    l2_errors_erk_strang = np.array([max_norm(compute_erk_error(t_stop, N, "strang")) for N in N_list])
+    errors_newmark = np.array([max_norm(compute_newmark_error(t_stop, N, "cps")) for N in N_list])
+    errors_alpha = np.array([max_norm(compute_alpha_error(t_stop, N, "cps")) for N in N_list])
+    errors_alpha_strang = np.array([max_norm(compute_alpha_error(t_stop, N, "strang")) for N in N_list])
+    errors_erk = np.array([max_norm(compute_erk_error(t_stop, N, "cps")) for N in N_list])
+    errors_erk_strang = np.array([max_norm(compute_erk_error(t_stop, N, "strang")) for N in N_list])
 
     title = "Partitioned System: Convergence Plot"
     subtitle = r"$\alpha_m = 0.3, \alpha_f = 0.5$"
@@ -160,10 +160,10 @@ if __name__ == '__main__':
     ylabel = r"$\vert\vert e \vert\vert_\infty$"
     fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     plot_error_ref(ax, dt_list)
-    ax.plot(dt_list, l2_errors_newmark, linestyle="none", marker=".", color="C9", label=r"Newmark $\beta$-CPS")
-    ax.plot(dt_list, l2_errors_alpha, linestyle="none", marker="x", color="C6", label=r"Generalized $\alpha$-CPS")
-    ax.plot(dt_list, l2_errors_erk, linestyle="none", marker="1", color="C8", label=r"ERK4-CPS")
-    ax.plot(dt_list, l2_errors_erk_strang, linestyle="none", marker="1", color="olive", label=r"ERK4-Strang")
-    ax.plot(dt_list, l2_errors_alpha_strang, linestyle="none", marker="x", color="darkcyan", label=r"Alpha-Strang")
+    ax.plot(dt_list, errors_newmark, linestyle="none", marker=".", color="C9", label=r"Newmark $\beta$-CPS")
+    ax.plot(dt_list, errors_alpha, linestyle="none", marker="x", color="C6", label=r"Generalized $\alpha$-CPS")
+    ax.plot(dt_list, errors_erk, linestyle="none", marker="1", color="C8", label=r"ERK4-CPS")
+    ax.plot(dt_list, errors_erk_strang, linestyle="none", marker="1", color="olive", label=r"ERK4-Strang")
+    ax.plot(dt_list, errors_alpha_strang, linestyle="none", marker="x", color="darkcyan", label=r"Alpha-Strang")
     ax.legend()
     plt.savefig("convergence_partitioned_all.png", dpi=300, bbox_inches='tight')
