@@ -1,14 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 from utility import *
-
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "serif",
-    "font.serif": ["Palatino"],
-})
-
-
 from monolithic_system import MonolithicSystem
 from timestepping import ERK, GeneralizedAlpha, NewmarkBeta
 
@@ -67,18 +60,18 @@ if __name__ == '__main__':
     t_stop = 20
     N_list = np.array([500, 1000, 2000, 4000, 8000])
     dt_list = np.array([t_stop / N for N in N_list])
-    l2_errors_newmark = np.array([l2_norm(compute_newmark_error(t_stop, N)) for N in N_list])
-    l2_errors_alpha = np.array([l2_norm(compute_alpha_error(t_stop, N)) for N in N_list])
-    l2_errors_erk = np.array([l2_norm(compute_erk_error(t_stop, N)) for N in N_list])
+    max_errors_newmark = np.array([max_norm(compute_newmark_error(t_stop, N)) for N in N_list])
+    max_errors_alpha = np.array([max_norm(compute_alpha_error(t_stop, N)) for N in N_list])
+    max_errors_erk = np.array([max_norm(compute_erk_error(t_stop, N)) for N in N_list])
 
     title = "Monolithic System: Convergence Plot"
     subtitle = r"$\alpha_m = 0.2, \alpha_f = 0.5$"
     xlabel = "dt"
-    ylabel = r"$\vert\vert e \vert\vert_2$"
+    ylabel = r"$\left\| e \right\|_\infty$"
     fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     plot_error_ref(ax, dt_list)
-    ax.plot(dt_list, l2_errors_newmark, linestyle="none", marker=".", color="C9", label=r"Newmark $\beta$")
-    ax.plot(dt_list, l2_errors_alpha, linestyle="none", marker="x", color="C6", label=r"Generalized $\alpha$")
-    ax.plot(dt_list, l2_errors_erk, linestyle="none", marker="1", color="C8", label=r"ERK4")
+    ax.plot(dt_list, max_errors_newmark, linestyle="none", marker=".", color="C9", label=r"Newmark $\beta$")
+    ax.plot(dt_list, max_errors_alpha, linestyle="none", marker="x", color="C6", label=r"Generalized $\alpha$")
+    ax.plot(dt_list, max_errors_erk, linestyle="none", marker="1", color="C8", label=r"ERK4")
     ax.legend()
     plt.savefig("convergence_plot_all.png", dpi=300, bbox_inches='tight')
