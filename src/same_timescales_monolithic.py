@@ -2,13 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from utility import *
-from monolithic_system import MonolithicSystem
+from monolithic_system import SameTimescales
 from timestepping import ERK, GeneralizedAlpha, NewmarkBeta
 
 # k1 = k2 = m1 = m2 = 1
 
 def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
-    ode_system = MonolithicSystem()
+    ode_system = SameTimescales()
     
     if solver_str == "newmark":
         newmark_gamma = 0.5
