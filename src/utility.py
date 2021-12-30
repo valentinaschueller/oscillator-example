@@ -9,6 +9,12 @@ import matplotlib.pyplot as plt
 
 def prepare_plot(title, subtitle, xlabel, ylabel):
     """set up a figure and axis with some basic properties"""
+    plt.rcParams.update({
+        "text.usetex": True,
+        "font.family": "serif",
+        "font.serif": ["Palatino"],
+    })
+    
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
 
