@@ -76,10 +76,10 @@ def compute_energy(u1, u2, v1, v2):
     return v1**2 + v2**2 + u1**2 + u2**2 + (u2-u1)**2
 
 def l1_norm(vec):
-    return np.sum(np.abs(vec))/vec.shape[1]
+    return np.sum(np.abs(vec))
 
 def l2_norm(vec):
-    return np.sum(vec**2)/vec.shape[1]
+    return np.sum(vec**2)
 
 def max_norm(vec):
     return np.max(np.abs(vec))
