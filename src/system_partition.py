@@ -1,43 +1,54 @@
 import numpy as np
 
 class SystemPartition:
-    def __init__(self, left_system: bool, result_shape: tuple = (3,1)):
+    def __init__(self,
+                left_system: bool,
+                result_shape: tuple = (3,1),
+                k1: int = 1,
+                k2: int = 1,
+                k12: int = 1,
+                m1: int = 1,
+                m2: int = 1):
         self.left_system_bool = left_system
-        # for the formulation: u'' = A_second_order * u:
-        self.A_second_order = (-2) * np.eye(1, 1, dtype=float)
-        # for the formulation: Mu'' + Ku = 0:
-        self.M = np.eye(1, 1, dtype=float)
-        self.K = 2 * np.eye(1, 1, dtype=float)
-        # for the formulation: y' = A_first_order * y:
-        self.A_first_order = np.array(
-            [[0., 1.],
-            [-2., 0.]]
-        )
+        self.k12 = k12
+        
+        if left_system:
+            # for the formulation: Mu'' + Ku = 0:
+            self.M = m1 * np.eye(1, 1, dtype=float)
+            self.K = (k1 + k12) * np.eye(1, 1, dtype=float)
+            # for the formulation: y' = A_first_order * y:
+            self.A_first_order = np.array(
+                [[0., 1.],
+                [-(k1 + k12)/m1, 0.]]
+            )
+            # for the formulation: u'' = A_second_order * u:
+            self.A_second_order = -(k1 + k12) * np.eye(1, 1, dtype=float)
+        else:
+            # for the formulation: Mu'' + Ku = 0:
+            self.M = m2 * np.eye(1, 1, dtype=float)
+            self.K = (k2 + k12) * np.eye(1, 1, dtype=float)
+            # for the formulation: y' = A_first_order * y:
+            self.A_first_order = np.array(
+                [[0., 1.],
+                [-(k2 + k12)/m2, 0.]]
+            )
+            # for the formulation: u'' = A_second_order * u:
+            self.A_second_order = -(k2 + k12) * np.eye(1, 1, dtype=float)
+
         self.result = np.zeros(result_shape)
         self.other_u = self._initial_other_u()
         try:
             self.result[:, 0] = self._initial_conditions()
         except ValueError:
             self.result[:, 0] = self._initial_conditions()[:2]
-        # print("--- System Setup ---")
-        # print(f"A_first_order: {self.A_first_order}")
-        # print(f"A_second_order: {self.A_second_order}")
-        # print(f"K: {self.K}")
-        # print(f"M: {self.M}")
-        # print(f"Initial Conditions: {self.result[:, 0]}")
-        # print(f"Other u: {self.other_u}")
 
     def second_order_force(self, t):
         del t # no time-dependent force so far
-        # k12 * other_u
-        # print(f"second order, t = {t}, left system: {self.left_system_bool}: {self.other_u}")
-        return self.other_u
+        return self.k12 * self.other_u
 
     def first_order_force(self, t):
         del t # no time-dependent force so far
-        # [0, k12 * other_u]
-        # print(f"first order, t = {t}, left system: {self.left_system_bool}: {self.other_u}")
-        return np.array([0., self.other_u], dtype=object)
+        return np.array([0., self.k12 * self.other_u], dtype=object)
 
     def _initial_conditions(self):
         if self.left_system_bool:
@@ -53,3 +64,10 @@ class SystemPartition:
             return np.array([1.])
         else:
             return np.array([0.])
+
+
+class SameTimescales(SystemPartition):
+    def __init__(self,
+                left_system: bool,
+                result_shape: tuple = (3,1)):
+        super().__init__(left_system, result_shape, 1, 1, 1, 1, 1)
