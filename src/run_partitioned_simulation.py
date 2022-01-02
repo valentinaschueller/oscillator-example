@@ -1,22 +1,6 @@
-import numpy as np
-import time
-
-from utility import *
 from system_partition import SameTimescales
 from coupling_schemes import *
-from timestepping import ERK, GeneralizedAlpha, NewmarkBeta
-
-import matplotlib.pyplot as plt
-
-def analytical_solution(t_end: float, N: int):
-    t = np.linspace(0, t_end, N+1)
-    result = np.array([
-        0.5 * (np.cos(t) + np.cos(np.sqrt(3)*t)),
-        0.5 * (np.cos(t) - np.cos(np.sqrt(3)*t)),
-        0.5 * (- np.sin(t) - np.sqrt(3) * np.sin(np.sqrt(3)*t)),
-        0.5 * (- np.sin(t) + np.sqrt(3) * np.sin(np.sqrt(3)*t)),
-    ])
-    return result
+from timestepping import *
 
 def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""):
     if coupling_scheme_str == "css":
@@ -31,7 +15,11 @@ def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""
         run_simulation = run_strang_simulation
         left_system = SameTimescales(left_system=True, result_shape=(3, 2*N+1))
         right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
-    elif coupling_scheme_str == "implicit":
+    elif coupling_scheme_str == "implicit-cps":
+        run_simulation = run_implicit_cps_simulation
+        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
+        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
+    elif coupling_scheme_str == "implicit-css":
         run_simulation = run_implicit_css_simulation
         left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
         right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
@@ -71,7 +59,11 @@ def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str
         run_simulation = run_strang_simulation
         left_system = SameTimescales(left_system=True, result_shape=(3, 2*N+1))
         right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
-    elif coupling_scheme_str == "implicit":
+    elif coupling_scheme_str == "implicit-cps":
+        run_simulation = run_implicit_cps_simulation
+        left_system = SameTimescales(left_system=True, result_shape=(2, N+1))
+        right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
+    elif coupling_scheme_str == "implicit-css":
         run_simulation = run_implicit_css_simulation
         left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
         right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
@@ -113,7 +105,11 @@ def partitioned_erk(t_end: float, N: int, order: int = 1, coupling_scheme_str: s
         run_simulation = run_strang_simulation
         left_system = SameTimescales(left_system=True, result_shape=(2, 2*N+1))
         right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
-    elif coupling_scheme_str == "implicit":
+    elif coupling_scheme_str == "implicit-cps":
+        run_simulation = run_implicit_cps_simulation
+        left_system = SameTimescales(left_system=True, result_shape=(2, N+1))
+        right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
+    elif coupling_scheme_str == "implicit-css":
         run_simulation = run_implicit_css_simulation
         left_system = SameTimescales(left_system=True, result_shape=(2, N+1))
         right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
@@ -130,56 +126,3 @@ def partitioned_erk(t_end: float, N: int, order: int = 1, coupling_scheme_str: s
         right_result[1]]
     )
     return full_result
-
-def compute_newmark_error(t_stop, N, coupling_scheme_str: str = ""):
-    true_sol = analytical_solution(t_stop, N)
-    num_sol = partitioned_newmark_beta(t_stop, N, coupling_scheme_str)
-    return true_sol - num_sol
-
-def compute_alpha_error(t_stop, N, coupling_scheme_str: str = ""):
-    true_sol = analytical_solution(t_stop, N)
-    num_sol = partitioned_generalized_alpha(t_stop, N, coupling_scheme_str)
-    return true_sol - num_sol
-
-def compute_erk_error(t_stop, N, coupling_scheme_str: str = ""):
-    true_sol = analytical_solution(t_stop, N)
-    num_sol = partitioned_erk(t_stop, N, 4, coupling_scheme_str)
-    return true_sol - num_sol
-
-if __name__ == '__main__':
-    # N = 100
-    # t_stop = 20
-    # true_sol = analytical_solution(t_stop, N)
-    # num_sol_alpha = partitioned_generalized_alpha(t_stop, N, "cps")
-    # num_sol_erk4 = partitioned_erk(t_stop, N, 4, "cps")
-    # t = np.linspace(0., t_stop, N+1)
-    # create_solution_plots(t, num_sol_alpha, f"partitioned_alpha_{N}")
-    # create_solution_plots(t, num_sol_erk4, f"partitioned_erk_{N}")
-    # create_solution_plots(t, true_sol, "analytic")
-
-    t_stop = 20
-    N_list = np.array([500, 1000, 2000, 4000, 8000])
-    dt_list = np.array([t_stop / N for N in N_list])
-    errors_newmark = np.array([max_norm(compute_newmark_error(t_stop, N, "cps")) for N in N_list])
-    errors_alpha = np.array([max_norm(compute_alpha_error(t_stop, N, "cps")) for N in N_list])
-    errors_alpha_strang = np.array([max_norm(compute_alpha_error(t_stop, N, "strang")) for N in N_list])
-    errors_alpha_implicit = np.array([max_norm(compute_alpha_error(t_stop, N, "implicit")) for N in N_list])
-    errors_erk = np.array([max_norm(compute_erk_error(t_stop, N, "cps")) for N in N_list])
-    errors_erk_strang = np.array([max_norm(compute_erk_error(t_stop, N, "strang")) for N in N_list])
-    errors_erk_implicit = np.array([max_norm(compute_erk_error(t_stop, N, "implicit")) for N in N_list])
-
-    title = "Partitioned System: Convergence Plot"
-    subtitle = r"$\alpha_m = 0.2, \alpha_f = 0.5$"
-    xlabel = "dt"
-    ylabel = r"$\left\| e \right\|_\infty$"
-    fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)
-    plot_error_ref(ax, dt_list)
-    ax.plot(dt_list, errors_newmark, linestyle="none", marker="D", color="C9", label=r"Newmark $\beta$-CPS")
-    ax.plot(dt_list, errors_alpha, linestyle="none", marker="o", color="C6", label=r"Generalized $\alpha$-CSS")
-    ax.plot(dt_list, errors_erk, linestyle="none", marker="1", color="C8", label=r"ERK4-CPS")
-    ax.plot(dt_list, errors_erk_strang, linestyle="none", marker="1", color="olive", label=r"ERK4-Strang")
-    ax.plot(dt_list, errors_alpha_strang, linestyle="none", marker="x", color="darkcyan", label=r"Alpha-Strang")
-    ax.plot(dt_list, errors_erk_implicit, linestyle="none", marker="+", color="orange", label=r"ERK4-Implicit")
-    ax.plot(dt_list, errors_alpha_implicit, linestyle="none", marker="x", color="green", label=r"Alpha-Implicit")
-    ax.legend()
-    plt.savefig("convergence_partitioned_all.png", dpi=300, bbox_inches='tight')
