@@ -16,7 +16,7 @@ def run_cps_simulation(left_system, left_solver, right_system, right_solver, t_e
     return left_system.result, right_system.result
 
 def run_implicit_cps_simulation(left_system, left_solver, right_system, right_solver, t_end, N):
-    tol = 1e-4
+    tol = 1e-6
     max_iters = 10
     dt = t_end / N
     t = 0
@@ -39,7 +39,7 @@ def run_implicit_cps_simulation(left_system, left_solver, right_system, right_so
     return left_system.result, right_system.result
 
 def run_implicit_css_simulation(left_system, left_solver, right_system, right_solver, t_end, N):
-    tol = 1e-4
+    tol = 1e-6
     max_iters = 10
     dt = t_end / N
     t = 0
