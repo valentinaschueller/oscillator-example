@@ -18,8 +18,11 @@ def prepare_plot(title, subtitle, xlabel, ylabel):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
 
-    fig.suptitle(title, y=1.01, fontsize=14) # make title larger than default
-    ax.set_title(subtitle)
+    if subtitle != "":
+        fig.suptitle(title, y=1.01, fontsize=14) # make title larger than default
+        ax.set_title(subtitle)
+    else:
+        fig.suptitle(title, fontsize=14) # make title larger than default
 
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
@@ -83,3 +86,13 @@ def l2_norm(vec):
 
 def max_norm(vec):
     return np.max(np.abs(vec))
+
+def analytical_solution(t_end: float, N: int):
+    t = np.linspace(0, t_end, N+1)
+    result = np.array([
+        0.5 * (np.cos(t) + np.cos(np.sqrt(3)*t)),
+        0.5 * (np.cos(t) - np.cos(np.sqrt(3)*t)),
+        0.5 * (- np.sin(t) - np.sqrt(3) * np.sin(np.sqrt(3)*t)),
+        0.5 * (- np.sin(t) + np.sqrt(3) * np.sin(np.sqrt(3)*t)),
+    ])
+    return result
