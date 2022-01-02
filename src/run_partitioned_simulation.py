@@ -61,8 +61,8 @@ def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str
         right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
     elif coupling_scheme_str == "implicit-cps":
         run_simulation = run_implicit_cps_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(2, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
+        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
+        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
     elif coupling_scheme_str == "implicit-css":
         run_simulation = run_implicit_css_simulation
         left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
