@@ -2,29 +2,34 @@ from system_partition import SameTimescales
 from coupling_schemes import *
 from timestepping import *
 
-def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""):
+def return_simulation_runner(coupling_scheme_str: str):
     if coupling_scheme_str == "css":
         run_simulation = run_css_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
     elif coupling_scheme_str == "cps":
         run_simulation = run_cps_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
     elif coupling_scheme_str == "strang":
         run_simulation = run_strang_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, 2*N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
     elif coupling_scheme_str == "implicit-cps":
         run_simulation = run_implicit_cps_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
     elif coupling_scheme_str == "implicit-css":
         run_simulation = run_implicit_css_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
     else:
         raise NotImplementedError(f"Coupling scheme {coupling_scheme_str} not implemented!")
+    return run_simulation
+
+def return_system_partitions(t_end: float, N: int, result_values: int, coupling_scheme_str: str):
+    if coupling_scheme_str == "strang":
+        left_system = SameTimescales(True, t_end, 2*N, result_values)
+        right_system = SameTimescales(False, t_end, N, result_values)
+    else:
+        left_system = SameTimescales(True, t_end, N, result_values)
+        right_system = SameTimescales(False, t_end, N, result_values)
+    return left_system, right_system
+
+def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""):
+    run_simulation = return_simulation_runner(coupling_scheme_str)
+    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str)
+
     gamma = 0.5
     beta = 0.25
     # create solvers
@@ -47,28 +52,9 @@ def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""
     return full_result
 
 def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str = ""):
-    if coupling_scheme_str == "css":
-        run_simulation = run_css_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
-    elif coupling_scheme_str == "cps":
-        run_simulation = run_cps_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
-    elif coupling_scheme_str == "strang":
-        run_simulation = run_strang_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, 2*N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
-    elif coupling_scheme_str == "implicit-cps":
-        run_simulation = run_implicit_cps_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
-    elif coupling_scheme_str == "implicit-css":
-        run_simulation = run_implicit_css_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(3, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(3, N+1))
-    else:
-        raise NotImplementedError(f"Coupling scheme {coupling_scheme_str} not implemented!")
+    run_simulation = return_simulation_runner(coupling_scheme_str)
+    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str)
+
     alpha_m = 0.2
     alpha_f = 0.5
     gamma = 0.5 - alpha_m + alpha_f
@@ -93,28 +79,9 @@ def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str
     return full_result
 
 def partitioned_erk(t_end: float, N: int, order: int = 1, coupling_scheme_str: str = ""):
-    if coupling_scheme_str == "css":
-        run_simulation = run_css_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(2, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
-    elif coupling_scheme_str == "cps":
-        run_simulation = run_cps_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(2, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
-    elif coupling_scheme_str == "strang":
-        run_simulation = run_strang_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(2, 2*N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
-    elif coupling_scheme_str == "implicit-cps":
-        run_simulation = run_implicit_cps_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(2, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
-    elif coupling_scheme_str == "implicit-css":
-        run_simulation = run_implicit_css_simulation
-        left_system = SameTimescales(left_system=True, result_shape=(2, N+1))
-        right_system = SameTimescales(left_system=False, result_shape=(2, N+1))
-    else:
-        raise NotImplementedError(f"Coupling scheme {coupling_scheme_str} not implemented!")
+    run_simulation = return_simulation_runner(coupling_scheme_str)
+    left_system, right_system = return_system_partitions(t_end, N, 2, coupling_scheme_str)
+
     # create solvers
     solver_left = ERK(left_system.A_first_order, left_system.first_order_force, order)
     solver_right = ERK(right_system.A_first_order, right_system.first_order_force, order)
