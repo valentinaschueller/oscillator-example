@@ -96,3 +96,12 @@ def analytical_solution(t_end: float, N: int):
         0.5 * (- np.sin(t) + np.sqrt(3) * np.sin(np.sqrt(3)*t)),
     ])
     return result
+
+def interpolate_linear(left_value, right_value, percentage):
+    if percentage == 0:
+        return left_value
+    elif percentage == 1:
+        print(f"What's happening? {left_value}, {right_value}, {percentage}")
+        return right_value
+    else:
+        return percentage * right_value + (1 - percentage) * left_value
