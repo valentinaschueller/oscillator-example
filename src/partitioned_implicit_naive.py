@@ -32,6 +32,7 @@ def beautify_plot(ax):
     # remove top and right spine
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
+    ax.set_yticks([1e2, 1e0, 1e-2, 1e-4, 1e-6, 1e-8, 1e-10])
     return ax
 
 if __name__ == '__main__':
