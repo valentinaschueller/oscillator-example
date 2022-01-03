@@ -62,4 +62,4 @@ if __name__ == '__main__':
 
     ax.legend(ncol=2, loc='lower right')
     ax = beautify_plot(ax)
-    plt.savefig("convergence_same_timescales_monolithic_implicit.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig("convergence_same_timescales_partitioned_implicit.pdf", dpi=300, bbox_inches='tight')
