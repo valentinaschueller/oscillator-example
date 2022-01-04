@@ -43,7 +43,7 @@ class GeneralizedAlpha(TimesteppingMethod):
         else:
             raise ValueError("Unknown shape of last_values?")
 
-        force = self.alpha_f * self.F(t_n) + (1 - self.alpha_f) * self.F(t_n + dt)
+        force = self.alpha_f * self.F(t_n, t_n) + (1 - self.alpha_f) * self.F(t_n + dt, t_n)
 
         # solve for u_next
         m1 = (1 - self.alpha_m) / (self.beta * dt**2)
@@ -91,8 +91,8 @@ class ERK(TimesteppingMethod):
         next_values = self.erk_step(last_values, dt, t_n)
         return next_values
 
-    def du_dt(self, last_values: np.ndarray, t_n: float) -> np.ndarray:
-        return np.dot(self.first_order_matrix, last_values) + self.force_function(t_n)
+    def du_dt(self, last_values: np.ndarray, t_n: float, t_lower: float) -> np.ndarray:
+        return np.dot(self.first_order_matrix, last_values) + self.force_function(t_n, t_lower)
 
     def _erk1(self, u_i: np.ndarray, dt: float, t_i = 0) -> np.ndarray:
         """Explicit Euler method"""
@@ -123,14 +123,14 @@ class ERK(TimesteppingMethod):
     
     def _erk_gen(self, A: np.ndarray, b, c, u_i: np.ndarray, dt: float, t_i: float) -> np.ndarray:
         k = np.zeros(b.shape + u_i.shape, dtype=u_i.dtype)
-        k[0] = self.du_dt(u_i, t_i)
+        k[0] = self.du_dt(u_i, t_i, t_i)
         if len(b) > 1:
             for i in range(1, len(b)):
                 u_eval = u_i + dt * np.tensordot(A[i], k, axes=1)
                 t_eval = t_i + b[i] * dt
                 try:
-                    k[i] = self.du_dt(u_eval, t_eval)
+                    k[i] = self.du_dt(u_eval, t_eval, t_i)
                 except ValueError:
-                    k[i] = self.du_dt(u_eval, t_eval)[i]
+                    k[i] = self.du_dt(u_eval, t_eval, t_i)[i]
         u_next = u_i + dt * np.tensordot(c, k, axes=1)
         return u_next

@@ -22,12 +22,12 @@ class MonolithicSystem:
             [-(k1 + k12)/m1, k12/m1, 0., 0.],
             [k12/m2, -(k2 + k12)/m2, 0., 0.]])
     
-    def second_order_force(self, t):
-        del t # no time-dependent force for this system
+    def second_order_force(self, t, t_lower):
+        del t, t_lower # no time-dependent force for this system
         return np.array([0., 0.])
 
-    def first_order_force(self, t):
-        del t # no time-dependent force for this system
+    def first_order_force(self, t, t_lower):
+        del t, t_lower # no time-dependent force for this system
         return np.array([0., 0., 0., 0.])
 
 
