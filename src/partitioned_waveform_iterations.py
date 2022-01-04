@@ -46,7 +46,7 @@ if __name__ == '__main__':
     errors_erk1_strang = np.array([max_norm(compute_erk1_error(t_stop, N, "implicit-css")) for N in N_list])
 
     title = ""
-    subtitle = "Waveform Iterations"
+    subtitle = "Waveform Iterations (Linear)"
     xlabel = r"$\Delta t$"
     ylabel = r"$\left\| e \right\|_\infty$"
     fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)

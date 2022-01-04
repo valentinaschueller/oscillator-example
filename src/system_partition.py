@@ -14,7 +14,7 @@ class SystemPartition:
                 m2: int = 1):
         self.left_system_bool = left_system
         self.k12 = k12
-        self.interpolation_order = 1
+        self.interpolation_order = 0
         
         if left_system:
             # for the formulation: Mu'' + Ku = 0:

@@ -67,10 +67,11 @@ if __name__ == '__main__':
     max_errors_erk4 = np.array([max_norm(compute_erk_error(t_stop, N, 4)) for N in N_list])
     max_errors_erk1 = np.array([max_norm(compute_erk_error(t_stop, N, 1)) for N in N_list])
 
-    title = "Monolithic System (same time scales): Convergence Study"
+    title = ""
+    subtitle = "Monolithic System"
     xlabel = r"$\Delta t$"
     ylabel = r"$\left\| e \right\|_\infty$"
-    fig, ax = prepare_plot(title, "", xlabel, ylabel)
+    fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     plot_error_ref(ax, dt_list)
     ax.plot(dt_list, max_errors_erk1, linestyle="none", marker="3", color="maroon", label=r"ERK1")
     ax.plot(dt_list, max_errors_newmark, linestyle="none", marker=".", color="darkcyan", label=r"Newmark-$\beta$")

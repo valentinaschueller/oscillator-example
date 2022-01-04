@@ -47,7 +47,7 @@ if __name__ == '__main__':
     errors_erk1_cps = np.array([max_norm(compute_erk1_error(t_stop, N, "implicit-cps")) for N in N_list])
     # errors_erk1_css = np.array([max_norm(compute_erk1_error(t_stop, N, "implicit-css")) for N in N_list])
 
-    title = "Partitioned System (same time scales): Convergence Study"
+    title = ""
     subtitle = "Naive Implicit Coupling Schemes"
     xlabel = r"$\Delta t$"
     ylabel = r"$\left\| e \right\|_\infty$"

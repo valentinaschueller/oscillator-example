@@ -41,7 +41,7 @@ if __name__ == '__main__':
     errors_erk4_strang = np.array([max_norm(compute_erk4_error(t_stop, N, "strang")) for N in N_list])
     errors_erk1_strang = np.array([max_norm(compute_erk1_error(t_stop, N, "strang")) for N in N_list])
 
-    title = "Partitioned System (same time scales): Convergence Study"
+    title = ""
     subtitle = "Strang Splitting"
     xlabel = r"$\Delta t$"
     ylabel = r"$\left\| e \right\|_\infty$"
