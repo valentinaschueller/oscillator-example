@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from utility import *
-from monolithic_system import DiffTimescales
-from timestepping import ERK, GeneralizedAlpha, NewmarkBeta
+from ..utility import *
+from ..monolithic_system import DiffTimescales
+from ..timestepping import ERK, GeneralizedAlpha, NewmarkBeta
 
 # k1 = k2 = m1 = m2 = 1
 

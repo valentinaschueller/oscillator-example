@@ -1,10 +1,5 @@
 from sympy import *
 from sympy.plotting import plot as symplot
-from sympy import lambdify
-import numpy as np
-from numpy import cos, sin
-import matplotlib.pyplot as plt
-from utility import prepare_plot
 
 k1 = 20
 k2 = 0.1

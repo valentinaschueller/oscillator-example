@@ -106,3 +106,11 @@ class SameTimescales(SystemPartition):
                 N: int = 0,
                 result_values: int = 0):
         super().__init__(left_system, t_end, N, result_values, 1, 1, 1, 1, 1)
+
+class DiffTimeScales(SystemPartition):
+    def __init__(self,
+                left_system: bool,
+                t_end: float = 0.,
+                N: int = 0,
+                result_values: int = 0):
+        super().__init__(left_system, t_end, N, result_values, 20, 0.1, 0.5, 1, 1)

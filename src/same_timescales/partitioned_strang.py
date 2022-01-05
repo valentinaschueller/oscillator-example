@@ -1,9 +1,8 @@
 import numpy as np
-
-from utility import *
-from run_partitioned_simulation import *
-
 import matplotlib.pyplot as plt
+
+from ..utility import *
+from ..run_partitioned_simulation import *
 
 def compute_newmark_error(t_stop, N, coupling_scheme_str: str = ""):
     true_sol = analytical_solution(t_stop, N)
