@@ -1,8 +1,8 @@
 import numpy as np
 
-from ..utility import *
-from ..run_partitioned_simulation import *
-from ..coupling_schemes import *
+from utility import *
+from run_partitioned_simulation import *
+from coupling_schemes import *
 
 import matplotlib.pyplot as plt
 

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from ..utility import prepare_plot
+from utility import prepare_plot
 
 plt.rcParams.update({
     "text.usetex": True,
