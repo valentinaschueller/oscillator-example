@@ -11,24 +11,22 @@ def return_simulation_runner(coupling_scheme_str: str):
         run_simulation = run_strang_simulation
     elif coupling_scheme_str == "implicit-cps":
         run_simulation = run_implicit_cps_simulation
-    elif coupling_scheme_str == "implicit-css":
-        run_simulation = run_implicit_css_simulation
     else:
         raise NotImplementedError(f"Coupling scheme {coupling_scheme_str} not implemented!")
     return run_simulation
 
-def return_system_partitions(t_end: float, N: int, result_values: int, coupling_scheme_str: str):
+def return_system_partitions(t_end: float, N: int, result_values: int, coupling_scheme_str: str, **kwargs):
     if coupling_scheme_str == "strang":
-        left_system = DiffTimeScales(True, t_end, 2*N, result_values)
-        right_system = DiffTimeScales(False, t_end, N, result_values)
+        left_system = DiffTimeScales(True, t_end, 2*N, result_values, **kwargs)
+        right_system = DiffTimeScales(False, t_end, N, result_values, **kwargs)
     else:
-        left_system = DiffTimeScales(True, t_end, N, result_values)
-        right_system = DiffTimeScales(False, t_end, N, result_values)
+        left_system = DiffTimeScales(True, t_end, N, result_values, **kwargs)
+        right_system = DiffTimeScales(False, t_end, N, result_values, **kwargs)
     return left_system, right_system
 
-def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""):
+def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = "", **kwargs):
     run_simulation = return_simulation_runner(coupling_scheme_str)
-    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str)
+    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str, **kwargs)
 
     gamma = 0.5
     beta = 0.25
@@ -42,7 +40,7 @@ def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""
         beta, gamma, right_system.second_order_force
     )
     # run simulation
-    left_result, right_result = run_simulation(left_system, solver_left, right_system, solver_right, t_end, N)
+    left_result, right_result = run_simulation(left_system, solver_left, right_system, solver_right, t_end, N, **kwargs)
     full_result = np.array(
         [left_result[0],
         right_result[0],
@@ -51,9 +49,9 @@ def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""
     )
     return full_result
 
-def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str = ""):
+def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str = "", **kwargs):
     run_simulation = return_simulation_runner(coupling_scheme_str)
-    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str)
+    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str, **kwargs)
 
     alpha_m = 0.2
     alpha_f = 0.5
@@ -69,7 +67,7 @@ def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str
         beta, gamma, alpha_f, alpha_m, right_system.second_order_force
     )
     # run simulation
-    left_result, right_result = run_simulation(left_system, solver_left, right_system, solver_right, t_end, N)
+    left_result, right_result = run_simulation(left_system, solver_left, right_system, solver_right, t_end, N, **kwargs)
     full_result = np.array(
         [left_result[0],
         right_result[0],
@@ -78,14 +76,14 @@ def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str
     )
     return full_result
 
-def partitioned_erk(t_end: float, N: int, order: int = 1, coupling_scheme_str: str = ""):
+def partitioned_erk(t_end: float, N: int, order: int = 1, coupling_scheme_str: str = "", **kwargs):
     run_simulation = return_simulation_runner(coupling_scheme_str)
-    left_system, right_system = return_system_partitions(t_end, N, 2, coupling_scheme_str)
+    left_system, right_system = return_system_partitions(t_end, N, 2, coupling_scheme_str, **kwargs)
 
     # create solvers
     solver_left = ERK(left_system.A_first_order, left_system.first_order_force, order)
     solver_right = ERK(right_system.A_first_order, right_system.first_order_force, order)
-    left_result, right_result = run_simulation(left_system, solver_left, right_system, solver_right, t_end, N)
+    left_result, right_result = run_simulation(left_system, solver_left, right_system, solver_right, t_end, N, **kwargs)
     full_result = np.array(
         [left_result[0],
         right_result[0],

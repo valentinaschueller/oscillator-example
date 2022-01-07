@@ -5,24 +5,24 @@ from run_partitioned_simulation import *
 
 import matplotlib.pyplot as plt
 
-def compute_newmark_error(t_stop, N, coupling_scheme_str: str = ""):
+def compute_newmark_error(t_stop, N, coupling_scheme_str: str = "", **kwargs):
     true_sol = analytical_solution(t_stop, N)
-    num_sol = partitioned_newmark_beta(t_stop, N, coupling_scheme_str)
+    num_sol = partitioned_newmark_beta(t_stop, N, coupling_scheme_str, **kwargs)
     return true_sol - num_sol
 
-def compute_alpha_error(t_stop, N, coupling_scheme_str: str = ""):
+def compute_alpha_error(t_stop, N, coupling_scheme_str: str = "", **kwargs):
     true_sol = analytical_solution(t_stop, N)
-    num_sol = partitioned_generalized_alpha(t_stop, N, coupling_scheme_str)
+    num_sol = partitioned_generalized_alpha(t_stop, N, coupling_scheme_str, **kwargs)
     return true_sol - num_sol
 
-def compute_erk4_error(t_stop, N, coupling_scheme_str: str = ""):
+def compute_erk4_error(t_stop, N, coupling_scheme_str: str = "", **kwargs):
     true_sol = analytical_solution(t_stop, N)
-    num_sol = partitioned_erk(t_stop, N, 4, coupling_scheme_str)
+    num_sol = partitioned_erk(t_stop, N, 4, coupling_scheme_str, **kwargs)
     return true_sol - num_sol
 
-def compute_erk1_error(t_stop, N, coupling_scheme_str: str = ""):
+def compute_erk1_error(t_stop, N, coupling_scheme_str: str = "", **kwargs):
     true_sol = analytical_solution(t_stop, N)
-    num_sol = partitioned_erk(t_stop, N, 1, coupling_scheme_str)
+    num_sol = partitioned_erk(t_stop, N, 1, coupling_scheme_str, **kwargs)
     return true_sol - num_sol
 
 def beautify_plot(ax):
@@ -33,15 +33,20 @@ def beautify_plot(ax):
     return ax
 
 if __name__ == '__main__':
+    # t_stop = 20
+    # N = 200
+    # erk_sol = partitioned_erk(t_stop, N, 4, "cps",sc=10)
+    # create_solution_plots(np.linspace(0,t_stop,N+1), erk_sol, "erk4-subcycling")
+
     t_stop = 20
-    N_list = np.array([500, 1000, 2000, 4000, 8000, 16000])
+    N_list = np.array([1000, 2000, 4000, 8000])
     dt_list = np.array([t_stop / N for N in N_list])
-    errors_newmark_cps = np.array([max_norm(compute_newmark_error(t_stop, N, "cps")) for N in N_list])
-    errors_newmark_css = np.array([max_norm(compute_newmark_error(t_stop, N, "css")) for N in N_list])
-    errors_erk4_cps = np.array([max_norm(compute_erk4_error(t_stop, N, "cps")) for N in N_list])
-    errors_erk4_css = np.array([max_norm(compute_erk4_error(t_stop, N, "css")) for N in N_list])
-    errors_erk1_cps = np.array([max_norm(compute_erk1_error(t_stop, N, "cps")) for N in N_list])
-    errors_erk1_css = np.array([max_norm(compute_erk1_error(t_stop, N, "css")) for N in N_list])
+    errors_newmark_cps = np.array([max_norm(compute_newmark_error(t_stop, N, "cps", sc=4)) for N in N_list])
+    errors_newmark_css = np.array([max_norm(compute_newmark_error(t_stop, N, "css", sc=4)) for N in N_list])
+    errors_erk4_cps = np.array([max_norm(compute_erk4_error(t_stop, N, "cps", sc=4)) for N in N_list])
+    errors_erk4_css = np.array([max_norm(compute_erk4_error(t_stop, N, "css", sc=4)) for N in N_list])
+    errors_erk1_cps = np.array([max_norm(compute_erk1_error(t_stop, N, "cps", sc=4)) for N in N_list])
+    errors_erk1_css = np.array([max_norm(compute_erk1_error(t_stop, N, "css", sc=4)) for N in N_list])
 
     title = ""
     subtitle = "Naive Explicit Coupling Schemes"
