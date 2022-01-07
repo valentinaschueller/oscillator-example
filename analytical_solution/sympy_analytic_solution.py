@@ -3,7 +3,7 @@ from sympy.plotting import plot as symplot
 
 k1 = 20
 k2 = 0.1
-k12 = 0.5
+k12 = 1
 m1 = 1
 m2 = 1
 
@@ -14,7 +14,7 @@ def solve_two_mass_spring_system():
     u1, u2, v1, v2 = symbols("u1 u2 v1 v2", cls=Function)
 
     initial_conditions = {
-        u1(0): 1,
+        u1(0): 0.5,
         u2(0): 0.5,
         v1(0): 0,
         v2(0): 0,

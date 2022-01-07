@@ -12,7 +12,7 @@ plt.rcParams.update({
 def create_diff_timescale_plot():
     k1 = 20
     k2 = 0.1
-    k12 = 0.5
+    k12 = 1
     m1 = 1
     m2 = 1
     title = "Analytical Solution - Different Time Scales"
@@ -20,8 +20,10 @@ def create_diff_timescale_plot():
     xlabel = "time [s]"
     ylabel = "u(t)"
     t = np.linspace(0, 20, 1000)
-    u1 = 0.0126747231152769*np.cos(0.542045916608024*t) + 0.987325276884725*np.cos(4.52837567172696*t)
-    u2 = 0.51221563121716*np.cos(0.542045916608024*t) - 0.0122156312171607*np.cos(4.52837567172696*t)
+    w1 = 1.02463408140723
+    w2 = 4.58804152108705
+    u1 = 0.0262527968225597*np.cos(w1 * t) + 0.473747203177441*np.cos(w2 * t)
+    u2 = 0.523746578189158*np.cos(w1 * t) - 0.0237465781891588*np.cos(w2 * t)
 
     _, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     ax.plot(t, u1, label=r'$u_1$', color='darkcyan', linestyle='--')
@@ -42,7 +44,7 @@ def create_diff_timescale_plot():
     plt.locator_params(axis="y", nbins=6)
     ax.xaxis.set_label_coords(1,0.55)
     ax.legend()
-    plt.savefig("ana_sol_diff_scale.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig("ana_sol_diff_scale.png", dpi=300, bbox_inches='tight')
 
 def create_same_timescale_plot():
     title = "Analytical Solution - Same Time Scales"
