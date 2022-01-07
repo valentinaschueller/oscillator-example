@@ -39,14 +39,15 @@ if __name__ == '__main__':
     # create_solution_plots(np.linspace(0,t_stop,N+1), erk_sol, "erk4-subcycling")
 
     t_stop = 20
-    N_list = np.array([1000, 2000, 4000, 8000])
+    N_list = np.array([1000, 2000, 4000, 8000, 16000])
     dt_list = np.array([t_stop / N for N in N_list])
-    errors_newmark_cps = np.array([max_norm(compute_newmark_error(t_stop, N, "cps", sc=4)) for N in N_list])
-    errors_newmark_css = np.array([max_norm(compute_newmark_error(t_stop, N, "css", sc=4)) for N in N_list])
-    errors_erk4_cps = np.array([max_norm(compute_erk4_error(t_stop, N, "cps", sc=4)) for N in N_list])
-    errors_erk4_css = np.array([max_norm(compute_erk4_error(t_stop, N, "css", sc=4)) for N in N_list])
-    errors_erk1_cps = np.array([max_norm(compute_erk1_error(t_stop, N, "cps", sc=4)) for N in N_list])
-    errors_erk1_css = np.array([max_norm(compute_erk1_error(t_stop, N, "css", sc=4)) for N in N_list])
+    # errors_newmark_cps = np.array([max_norm(compute_newmark_error(t_stop, N, "cps", sc=4)) for N in N_list])
+    errors_newmark_css = np.array([max_norm(compute_newmark_error(t_stop, N, "css", sc=1)) for N in N_list])
+    errors_alpha_css = np.array([max_norm(compute_alpha_error(t_stop, N, "css", sc=1)) for N in N_list])
+    # errors_erk4_cps = np.array([max_norm(compute_erk4_error(t_stop, N, "cps", sc=4)) for N in N_list])
+    errors_erk4_css = np.array([max_norm(compute_erk4_error(t_stop, N, "css", sc=1)) for N in N_list])
+    # errors_erk1_cps = np.array([max_norm(compute_erk1_error(t_stop, N, "cps", sc=4)) for N in N_list])
+    errors_erk1_css = np.array([max_norm(compute_erk1_error(t_stop, N, "css", sc=1)) for N in N_list])
 
     title = ""
     subtitle = "Naive Explicit Coupling Schemes"
@@ -54,12 +55,11 @@ if __name__ == '__main__':
     ylabel = r"$\left\| e \right\|_\infty$"
     fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     plot_error_ref(ax, dt_list)
-    ax.plot(dt_list, errors_newmark_cps, linestyle="none", marker="3", color="maroon", label=r"Newmark-CPS")
-    ax.plot(dt_list, errors_newmark_css, linestyle="none", marker=".", color="darkcyan", label=r"Newmark-CSS")
-    ax.plot(dt_list, errors_erk1_cps, linestyle="none", marker="+", color="green", label=r"ERK1-CPS")
-    ax.plot(dt_list, errors_erk1_css, linestyle="none", marker="4", color="red", label=r"ERK1-CSS")
-    ax.plot(dt_list, errors_erk4_cps, linestyle="none", marker="x", color="darkorchid", label=r"ERK4-CPS")
-    ax.plot(dt_list, errors_erk4_css, linestyle="none", marker="1", color="olive", label=r"ERK4-CSS")
+    
+    ax.plot(dt_list, errors_newmark_css, linestyle="none", marker="3", color="maroon", label=r"Newmark-$\beta$")
+    ax.plot(dt_list, errors_alpha_css, linestyle="none", marker=".", color="darkcyan", label=r"generalized-$\alpha$")
+    ax.plot(dt_list, errors_erk1_css, linestyle="none", marker="+", color="green", label=r"ERK1")
+    ax.plot(dt_list, errors_erk4_css, linestyle="none", marker="x", color="darkorchid", label=r"ERK4")
 
     ax.legend(ncol=2, loc='lower right')
     ax = beautify_plot(ax)
