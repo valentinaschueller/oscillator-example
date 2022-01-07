@@ -44,7 +44,7 @@ def create_diff_timescale_plot():
     plt.locator_params(axis="y", nbins=6)
     ax.xaxis.set_label_coords(1,0.55)
     ax.legend()
-    plt.savefig("ana_sol_diff_scale.png", dpi=300, bbox_inches='tight')
+    plt.savefig("ana_sol_diff_scale.pdf", dpi=300, bbox_inches='tight')
 
 def create_same_timescale_plot():
     title = "Analytical Solution - Same Time Scales"
