@@ -57,12 +57,12 @@ if __name__ == '__main__':
     ylabel = r"$\left\| e \right\|_\infty$"
     fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     plot_error_ref(ax, dt_list)
-    ax.plot(dt_list, errors_newmark_cps, marker="3", color="maroon", label=r"Newmark-FP-CPS")
-    ax.plot(dt_list, errors_alpha_cps, marker="1", color="darkcyan", label=r"generalized-$\alpha$-FP-CPS")
+    ax.plot(dt_list, errors_newmark_cps, linestyle="none", marker="3", color="maroon", label=r"Newmark-FP-CPS")
+    ax.plot(dt_list, errors_alpha_cps, linestyle="none", marker="1", color="darkcyan", label=r"generalized-$\alpha$-FP-CPS")
     # ax.plot(dt_list, errors_newmark_css, linestyle="none", marker=".", color="darkcyan", label=r"Newmark-CSS")
-    ax.plot(dt_list, errors_erk1_cps, marker="+", color="green", label=r"ERK1-FP-CPS")
+    ax.plot(dt_list, errors_erk1_cps, linestyle="none", marker="+", color="green", label=r"ERK1-FP-CPS")
     # ax.plot(dt_list, errors_erk1_css, linestyle="none", marker="4", color="red", label=r"ERK1-CSS")
-    ax.plot(dt_list, errors_erk4_cps, marker="x", color="darkorchid", label=r"ERK4-FP-CPS")
+    ax.plot(dt_list, errors_erk4_cps, linestyle="none", marker="x", color="darkorchid", label=r"ERK4-FP-CPS")
     # ax.plot(dt_list, errors_erk4_css, linestyle="none", marker="1", color="olive", label=r"ERK4-CSS")
 
     ax.legend(ncol=2, loc='lower right')
