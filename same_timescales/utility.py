@@ -76,13 +76,28 @@ def create_solution_plots(t, sol, dir_name: str ="plots"):
     plot_energy(t, energy, plotdir_path)
 
 def compute_energy(u1, u2, v1, v2):
-    return v1**2 + v2**2 + u1**2 + u2**2 + (u2-u1)**2
+    u_data = np.array([u1, u2])
+    v_data = np.array([v1, v2])
+    m1 = 1
+    m2 = 1
+    k1 = 1
+    k2 = 1
+    k12 = 1
+    M = np.array(
+        [[m1, 0],
+        [0, m2]], dtype=float)
+    K = np.array(
+        [[(k1 + k12), -k12],
+        [-k12, (k2 + k12)]], dtype=float)
+    kinetic_energy = 0.5* np.array([np.dot(v.T,np.dot(M,v)) for v in v_data.T])
+    spring_energy = 0.5 * np.array([np.dot(u.T,np.dot(K,u)) for u in u_data.T])
+    return kinetic_energy + spring_energy
 
 def l1_norm(vec):
     return np.sum(np.abs(vec))
 
 def l2_norm(vec):
-    return np.sum(vec**2)
+    return np.sqrt(np.sum(vec**2))
 
 def max_norm(vec):
     return np.max(np.abs(vec))

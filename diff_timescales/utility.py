@@ -76,25 +76,42 @@ def create_solution_plots(t, sol, dir_name: str ="plots"):
     plot_energy(t, energy, plotdir_path)
 
 def compute_energy(u1, u2, v1, v2):
-    return v1**2 + v2**2 + u1**2 + u2**2 + (u2-u1)**2
+    u_data = np.array([u1, u2])
+    v_data = np.array([v1, v2])
+    m1 = 1
+    m2 = 1
+    k1 = 20
+    k2 = 0.1
+    k12 = 1
+    M = np.array(
+        [[m1, 0],
+        [0, m2]], dtype=float)
+    K = np.array(
+        [[(k1 + k12), -k12],
+        [-k12, (k2 + k12)]], dtype=float)
+    kinetic_energy = 0.5* np.array([np.dot(v.T,np.dot(M,v)) for v in v_data.T])
+    spring_energy = 0.5 * np.array([np.dot(u.T,np.dot(K,u)) for u in u_data.T])
+    return kinetic_energy + spring_energy
 
 def l1_norm(vec):
     return np.sum(np.abs(vec))
 
 def l2_norm(vec):
-    return np.sum(vec**2)
+    return np.sqrt(np.sum(vec**2))
 
 def max_norm(vec):
     return np.max(np.abs(vec))
 
 def analytical_solution(t_end: float, N: int):
     t = np.linspace(0, t_end, N+1)
+    w1 = 1.02463408140723
+    w2 = 4.58804152108705
     result = np.array([
-        0.5 * (np.cos(t) + np.cos(np.sqrt(3)*t)),
-        0.5 * (np.cos(t) - np.cos(np.sqrt(3)*t)),
-        0.5 * (- np.sin(t) - np.sqrt(3) * np.sin(np.sqrt(3)*t)),
-        0.5 * (- np.sin(t) + np.sqrt(3) * np.sin(np.sqrt(3)*t)),
-    ])
+            0.0262527968225597*np.cos(w1 * t) + 0.473747203177441*np.cos(w2 * t),
+            0.523746578189158*np.cos(w1 * t) - 0.0237465781891588*np.cos(w2 * t),
+            -0.0268995103566541*np.sin(w1 * t) - 2.17357183867696*np.sin(w2 * t),
+            -0.536648594033029*np.sin(w1 * t) + 0.108950286715601*np.sin(w2 * t),
+        ])
     return result
 
 def interpolate_linear(left_value, right_value, percentage):
