@@ -17,18 +17,18 @@ def return_simulation_runner(coupling_scheme_str: str):
         raise NotImplementedError(f"Coupling scheme {coupling_scheme_str} not implemented!")
     return run_simulation
 
-def return_system_partitions(t_end: float, N: int, result_values: int, coupling_scheme_str: str):
+def return_system_partitions(t_end: float, N: int, result_values: int, coupling_scheme_str: str, **kwargs):
     if coupling_scheme_str == "strang":
-        left_system = SameTimescales(True, t_end, 2*N, result_values)
-        right_system = SameTimescales(False, t_end, N, result_values)
+        left_system = SameTimescales(True, t_end, 2*N, result_values, **kwargs)
+        right_system = SameTimescales(False, t_end, N, result_values, **kwargs)
     else:
-        left_system = SameTimescales(True, t_end, N, result_values)
-        right_system = SameTimescales(False, t_end, N, result_values)
+        left_system = SameTimescales(True, t_end, N, result_values, **kwargs)
+        right_system = SameTimescales(False, t_end, N, result_values, **kwargs)
     return left_system, right_system
 
-def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""):
+def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = "", **kwargs):
     run_simulation = return_simulation_runner(coupling_scheme_str)
-    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str)
+    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str, **kwargs)
 
     gamma = 0.5
     beta = 0.25
@@ -51,9 +51,9 @@ def partitioned_newmark_beta(t_end: float, N: int, coupling_scheme_str: str = ""
     )
     return full_result
 
-def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str = ""):
+def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str = "", **kwargs):
     run_simulation = return_simulation_runner(coupling_scheme_str)
-    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str)
+    left_system, right_system = return_system_partitions(t_end, N, 3, coupling_scheme_str, **kwargs)
 
     alpha_m = 0.2
     alpha_f = 0.5
@@ -78,9 +78,9 @@ def partitioned_generalized_alpha(t_end: float, N: int, coupling_scheme_str: str
     )
     return full_result
 
-def partitioned_erk(t_end: float, N: int, order: int = 1, coupling_scheme_str: str = ""):
+def partitioned_erk(t_end: float, N: int, order: int = 1, coupling_scheme_str: str = "", **kwargs):
     run_simulation = return_simulation_runner(coupling_scheme_str)
-    left_system, right_system = return_system_partitions(t_end, N, 2, coupling_scheme_str)
+    left_system, right_system = return_system_partitions(t_end, N, 2, coupling_scheme_str, **kwargs)
 
     # create solvers
     solver_left = ERK(left_system.A_first_order, left_system.first_order_force, order)

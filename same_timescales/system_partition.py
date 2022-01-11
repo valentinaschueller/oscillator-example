@@ -11,10 +11,11 @@ class SystemPartition:
                 k2: int = 1,
                 k12: int = 1,
                 m1: int = 1,
-                m2: int = 1):
+                m2: int = 1,
+                **kwargs):
         self.left_system_bool = left_system
         self.k12 = k12
-        self.interpolation_order = 0
+        self.interpolation_order = kwargs.get("interpolation_order", 0)
         
         if left_system:
             # for the formulation: Mu'' + Ku = 0:
@@ -104,13 +105,6 @@ class SameTimescales(SystemPartition):
                 left_system: bool,
                 t_end: float = 0.,
                 N: int = 0,
-                result_values: int = 0):
-        super().__init__(left_system, t_end, N, result_values, 1, 1, 1, 1, 1)
-
-class DiffTimeScales(SystemPartition):
-    def __init__(self,
-                left_system: bool,
-                t_end: float = 0.,
-                N: int = 0,
-                result_values: int = 0):
-        super().__init__(left_system, t_end, N, result_values, 20, 0.1, 0.5, 1, 1)
+                result_values: int = 0,
+                **kwargs):
+        super().__init__(left_system, t_end, N, result_values, 1, 1, 1, 1, 1, **kwargs)
