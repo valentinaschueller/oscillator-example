@@ -1,0 +1,5 @@
+dependencies:
+    - python>=3.6
+    - numpy>=1.21
+    - matplotlib>=3.4
+    - sympy>=1.8
