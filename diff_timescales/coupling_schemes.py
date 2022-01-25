@@ -50,7 +50,7 @@ def run_implicit_cps_simulation(left_system, left_solver, right_system, right_so
         sc = kwargs['sc']
     else:
         sc = 1
-    tol = 1e-6
+    tol = 1e-8
     max_iters = 10
     dt = t_end / N
     dt_sc = dt/sc

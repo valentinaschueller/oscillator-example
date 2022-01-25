@@ -18,11 +18,10 @@ class SystemPartition:
         if "sc" in kwargs:
             self.sc = kwargs["sc"]
         else:
+            print("Default: No subcycling")
             self.sc = 1
-        if "interpolation_order" in kwargs:
-            self.interpolation_order = kwargs["interpolation_order"]
-        else:
-            self.interpolation_order = 0
+        
+        self.interpolation_order = kwargs.get("interpolation_order", 0)
 
         if left_system:
             # for the formulation: Mu'' + Ku = 0:
@@ -53,13 +52,14 @@ class SystemPartition:
         else:
             self.result = np.full((result_values, N+1), np.inf)
             self.t_values = np.linspace(0, t_end, N+1)
-        self.dt = t_end/N
         if self.left_system_bool:
             self.other_u = np.full(N + 1, np.inf)
             self.other_t_values = np.linspace(0, t_end, N+1)
+            self.other_dt = t_end/N
         else:
             self.other_u = np.full(self.sc*N + 1, np.inf)
             self.other_t_values = np.linspace(0, t_end, self.sc*N+1)
+            self.other_dt = t_end/(self.sc*N)
         self.other_u[0] = self._initial_other_u()
         try:
             self.result[:, 0] = self._initial_conditions()
@@ -67,6 +67,7 @@ class SystemPartition:
             self.result[:, 0] = self._initial_conditions()[:2]
 
     def other_u_at(self, t, t_lower):
+        # get id of "left" u-value in current interval
         idx = np.where(self.other_t_values == self.other_t_values[self.other_t_values <= (t_lower+1e-10)].max())[0][0]
         if self.interpolation_order == 0:
             if self.other_u[idx + 1] == np.inf:
@@ -76,9 +77,9 @@ class SystemPartition:
         elif self.interpolation_order == 1:
             previous_other_u = self.other_u[idx]
             if self.other_u[idx + 1] == np.inf:
-                self.other_u[idx + 1] = previous_other_u
+                self.other_u[idx + 1] = previous_other_u # constant extrapolation in first iteration
             next_other_u = self.other_u[idx + 1]
-            percentage = (t - t_lower) / self.dt
+            percentage = (t - t_lower) / self.other_dt
             interpolated_u = interpolate_linear(previous_other_u, next_other_u, percentage)
             # print(f"Using interpolated {interpolated_u} instead of {previous_other_u}, {next_other_u}")
             return interpolated_u

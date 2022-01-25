@@ -29,16 +29,30 @@ def beautify_plot(ax):
     # remove top and right spine
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    ax.set_yticks([1e2, 1e0, 1e-2, 1e-4, 1e-6, 1e-8, 1e-10])
+    # ax.set_yticks([1e2, 1e0, 1e-2, 1e-4, 1e-6, 1e-8, 1e-10])
+    return ax
+
+def plot_error_ref(ax, dt):
+    """create an error log-log plot in the current axis"""
+    o1 = dt
+    o2 = dt*dt
+    o3 = dt**3
+    o4 = dt**4
+    ax.loglog(dt, o1, 'k-', label='$\mathcal{O}(\Delta t)$', lw=1)
+    ax.loglog(dt, o2, 'k--', label='$\mathcal{O}(\Delta t^2)$', lw=1)
+    ax.loglog(dt, o3, 'k:', label='$\mathcal{O}(\Delta t^3)$', lw=1)
+    ax.loglog(dt, o4, 'k-.', label='$\mathcal{O}(\Delta t^4)$', lw=1)
     return ax
 
 if __name__ == '__main__':
     t_stop = 20
     N_list = np.array([125, 250, 500, 1000, 2000, 4000, 8000])
     dt_list = np.array([t_stop / N for N in N_list])
-    errors_newmark_cps = np.array([max_norm(compute_newmark_error(t_stop, N, "cps")) for N in N_list])
+    # errors_newmark_cps = np.array([max_norm(compute_newmark_error(t_stop, N, "cps")) for N in N_list])
     errors_newmark_css = np.array([max_norm(compute_newmark_error(t_stop, N, "css")) for N in N_list])
-    errors_erk4_cps = np.array([max_norm(compute_erk4_error(t_stop, N, "cps")) for N in N_list])
+    errors_alpha_cps = np.array([max_norm(compute_alpha_error(t_stop, N, "cps")) for N in N_list])
+    errors_alpha_css = np.array([max_norm(compute_alpha_error(t_stop, N, "css")) for N in N_list])
+    # errors_erk4_cps = np.array([max_norm(compute_erk4_error(t_stop, N, "cps")) for N in N_list])
     errors_erk4_css = np.array([max_norm(compute_erk4_error(t_stop, N, "css")) for N in N_list])
     errors_erk1_cps = np.array([max_norm(compute_erk1_error(t_stop, N, "cps")) for N in N_list])
     errors_erk1_css = np.array([max_norm(compute_erk1_error(t_stop, N, "css")) for N in N_list])
@@ -49,12 +63,14 @@ if __name__ == '__main__':
     ylabel = r"$\left\| e \right\|_\infty$"
     fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     plot_error_ref(ax, dt_list)
-    ax.plot(dt_list, errors_newmark_cps, linestyle="none", marker="3", color="maroon", label=r"Newmark-CPS")
-    ax.plot(dt_list, errors_newmark_css, linestyle="none", marker=".", color="darkcyan", label=r"Newmark-CSS")
-    ax.plot(dt_list, errors_erk1_cps, linestyle="none", marker="+", color="green", label=r"ERK1-CPS")
-    ax.plot(dt_list, errors_erk1_css, linestyle="none", marker="4", color="red", label=r"ERK1-CSS")
-    ax.plot(dt_list, errors_erk4_cps, linestyle="none", marker="x", color="darkorchid", label=r"ERK4-CPS")
-    ax.plot(dt_list, errors_erk4_css, linestyle="none", marker="1", color="olive", label=r"ERK4-CSS")
+    ax.plot(dt_list, errors_erk1_cps, linestyle="none", marker="3", color="maroon", label=r"ERK1 (CPS)")
+    ax.plot(dt_list, errors_erk1_css, linestyle="none", marker="3", color="tomato", label=r"ERK1 (CSS)")
+    # ax.plot(dt_list, errors_newmark_cps, linestyle="none", marker=".", color="darkcyan", label=r"Newmark-$\beta$ (CPS)")
+    ax.plot(dt_list, errors_newmark_css, linestyle="none", marker=".", color="darkcyan", label=r"Newmark-$\beta$ (CSS)")
+    ax.plot(dt_list, errors_alpha_cps, linestyle="none", marker="x", color="darkorchid", label=r"generalized-$\alpha$ (CPS)")
+    ax.plot(dt_list, errors_alpha_css, linestyle="none", marker="x", color="orchid", label=r"generalized-$\alpha$ (CSS)")
+    # ax.plot(dt_list, errors_erk4_cps, linestyle="none", marker="1", color="olive", label=r"ERK4 (CPS)")
+    ax.plot(dt_list, errors_erk4_css, linestyle="none", marker="1", color="olive", label=r"ERK4 (CSS)")
 
     ax.legend(ncol=2, loc='lower right')
     ax = beautify_plot(ax)
