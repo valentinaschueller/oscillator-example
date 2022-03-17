@@ -3,7 +3,6 @@
 Python implementation for my seminar paper on "Methods for Error Reduction in Time-Coupled Partitioned Simulations".
 I worked on this as part of the M.Sc. seminar "Partitioned Fluid-Structure Interaction and Multiphysics Simulations" in the winter term 2021/22.
 
-[Look here](https://github.com/valentinaschueller/fsi-seminar-paper) for the final paper and my presentation.
 
 ## Notes on the code
 
