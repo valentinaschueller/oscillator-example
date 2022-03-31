@@ -1,13 +1,27 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from utility import prepare_plot
+def prepare_plot(title, subtitle, xlabel, ylabel):
+    """set up a figure and axis with some basic properties"""
+    plt.rcParams.update({
+        "text.usetex": True,
+        "font.family": "serif",
+        "font.serif": ["Palatino"],
+    })
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
 
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "serif",
-    "font.serif": ["Palatino"],
-})
+    if subtitle != "":
+        fig.suptitle(title, y=1.01, fontsize=14) # make title larger than default
+        ax.set_title(subtitle)
+    else:
+        fig.suptitle(title, fontsize=14) # make title larger than default
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+
+    return fig, ax
 
 def create_diff_timescale_plot():
     k1 = 20
@@ -90,8 +104,8 @@ def create_same_timescale_plot_pres():
     ylabel = "u(t)"
     t = np.linspace(0, 20, 1000)
 
-    u1 = 0.5 * (np.cos(t) + np.cos(np.sqrt(3)*t))
-    u2 = 0.5 * (np.cos(t) - np.cos(np.sqrt(3)*t))
+    u1 = 0.5 * (np.cos(t) + np.cos(3*t))
+    u2 = 0.5 * (np.cos(t) - np.cos(3*t))
 
     _, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     ax.plot(t, u1, label=r'$u_1$', color='darkcyan', linestyle='--')
@@ -121,8 +135,8 @@ def create_same_timescale_plot():
     ylabel = "u(t)"
     t = np.linspace(0, 20, 1000)
 
-    u1 = 0.5 * (np.cos(t) + np.cos(np.sqrt(3)*t))
-    u2 = 0.5 * (np.cos(t) - np.cos(np.sqrt(3)*t))
+    u1 = 0.5 * (np.cos(t) + np.cos(3*t))
+    u2 = 0.5 * (np.cos(t) - np.cos(3*t))
 
     _, ax = prepare_plot(title, subtitle, xlabel, ylabel)
     ax.plot(t, u1, label=r'$u_1$', color='darkcyan', linestyle='--')

@@ -3,7 +3,6 @@ Created on Fri Apr 23 16:14:08 2021
 
 @author: valentina
 """
-import os
 import numpy as np
 import matplotlib.pyplot as plt
 
