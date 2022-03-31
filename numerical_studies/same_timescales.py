@@ -1,7 +1,10 @@
+from pathlib import Path
+from matplotlib.pyplot import plot
 import numpy as np
 
 from monolithic_system import MonolithicSystem
 from system_partition import SystemPartition
+from utility import plot_displacements, plot_velocities, plot_energy
 
 m1 = 1
 m2 = 1
@@ -18,6 +21,15 @@ def compute_energy(u1, u2, v1, v2):
     kinetic_energy = 0.5 * np.array([np.dot(v.T, np.dot(M, v)) for v in v_data.T])
     spring_energy = 0.5 * np.array([np.dot(u.T, np.dot(K, u)) for u in u_data.T])
     return kinetic_energy + spring_energy
+
+
+def create_solution_plots(t, sol, dir_name: str = "plots"):
+    plotdir_path = Path(dir_name)
+    plotdir_path.mkdir(exist_ok=True)
+    energy = compute_energy(sol[0, :], sol[1, :], sol[2, :], sol[3, :])
+    plot_displacements(t, sol, plotdir_path)
+    plot_velocities(t, sol, plotdir_path)
+    plot_energy(t, energy, plotdir_path)
 
 
 def analytical_solution(t_end: float, N: int):
