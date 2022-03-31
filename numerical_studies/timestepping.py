@@ -185,7 +185,7 @@ class ImplicitMidpoint(TimesteppingMethod):
     def compute_timestep(self, dt: float, t_n: float, last_values: np.ndarray):
         # rhs: (I+0.5*dt*A) * last_values + b = R * last_values + b
         # compute contribution of force function to rhs
-        b = dt * self.force_function(t_n + dt/2, t_n)
+        b = dt * self.force_function(t_n + dt / 2, t_n)
         R = np.eye(*self.A.shape) + 0.5 * dt * self.A
         rhs = np.dot(R, last_values) + b
         # finish system and solve: L * next_values = rhs
