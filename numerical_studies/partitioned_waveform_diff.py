@@ -1,11 +1,8 @@
-import numpy as np
-
-from utility import *
-from run_partitioned_simulation import *
-from coupling_schemes import *
-from diff_timescales import DiffTimescalesPart, analytical_solution
-
 import matplotlib.pyplot as plt
+import numpy as np
+from diff_timescales import DiffTimescalesPart, analytical_solution
+from run_partitioned_simulation import *
+from utility import max_norm, plot_error_ref, prepare_plot
 
 
 def compute_newmark_error(t_stop, N, coupling_scheme_str: str = "", **kwargs):
