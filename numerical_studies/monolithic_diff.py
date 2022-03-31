@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import numpy as np
 import matplotlib.pyplot as plt
-
-from utility import *
+import numpy as np
 from diff_timescales import DiffTimescales
-from timestepping import ERK, GeneralizedAlpha, NewmarkBeta
+from timestepping import ERK, GeneralizedAlpha, ImplicitMidpoint, NewmarkBeta
+from utility import *
 
 
 def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
@@ -49,6 +48,11 @@ def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
             force_function=ode_system.first_order_force,
             order=1,
         )
+    elif solver_str == "mid":
+        solver = ImplicitMidpoint(
+            ode_system.A_first_order,
+            force_function=ode_system.first_order_force,
+        )
     else:
         raise NotImplementedError(f"Solver {solver_str} not implemented!")
 
@@ -59,18 +63,8 @@ def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
     return analytical_solution, numerical_solution
 
 
-def compute_newmark_error(t_stop, N):
-    true_sol, num_sol = run_simulation(t_stop, N, solver_str="newmark")
-    return true_sol - num_sol[0:4, :]
-
-
-def compute_alpha_error(t_stop, N):
-    true_sol, num_sol = run_simulation(t_stop, N, solver_str="alpha")
-    return true_sol - num_sol[0:4, :]
-
-
-def compute_erk_error(t_stop, N, order: int):
-    true_sol, num_sol = run_simulation(t_stop, N, solver_str=f"erk{order}")
+def compute_simulation_error(t_stop, N, solver_str):
+    true_sol, num_sol = run_simulation(t_stop, N, solver_str)
     return true_sol - num_sol[0:4, :]
 
 
@@ -100,16 +94,16 @@ if __name__ == "__main__":
     N_list = np.array([1000, 2000, 4000, 8000, 16000])
     dt_list = np.array([t_stop / N for N in N_list])
     max_errors_newmark = np.array(
-        [max_norm(compute_newmark_error(t_stop, N)) for N in N_list]
+        [max_norm(compute_simulation_error(t_stop, N, "newmark")) for N in N_list]
     )
     max_errors_alpha = np.array(
-        [max_norm(compute_alpha_error(t_stop, N)) for N in N_list]
+        [max_norm(compute_simulation_error(t_stop, N, "alpha")) for N in N_list]
     )
     max_errors_erk4 = np.array(
-        [max_norm(compute_erk_error(t_stop, N, 4)) for N in N_list]
+        [max_norm(compute_simulation_error(t_stop, N, "erk4")) for N in N_list]
     )
     max_errors_erk1 = np.array(
-        [max_norm(compute_erk_error(t_stop, N, 1)) for N in N_list]
+        [max_norm(compute_simulation_error(t_stop, N, "erk1")) for N in N_list]
     )
 
     title = ""
