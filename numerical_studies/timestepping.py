@@ -192,3 +192,35 @@ class ImplicitMidpoint(TimesteppingMethod):
         L = np.eye(*self.A.shape) - 0.5 * dt * self.A
         next_values = np.linalg.solve(L, rhs)
         return next_values
+
+
+class SemiImplicitEuler(TimesteppingMethod):
+    """
+    semi-implicit Euler method/symplectic Euler method/Euler-A method
+
+    https://en.wikipedia.org/wiki/Semi-implicit_Euler_method
+    """
+
+    def __init__(
+        self,
+        A: np.ndarray,
+        F: callable,
+    ):
+        # for the formulation: y' = Ay + b, where b = [0,F]^T, A = [0, I; K/M, 0]:
+        half_size = int(len(A) / 2)
+        # extract lower left subblock of A
+        self.KM = A[half_size:, :half_size]
+        self.F = F
+
+    def compute_timestep(self, dt: float, t_n: float, last_values: np.ndarray):
+        if last_values.size == 4:
+            u_n = last_values[[0, 1]]
+            v_n = last_values[[2, 3]]
+        elif last_values.size == 2:
+            u_n = last_values[0]
+            v_n = last_values[1]
+        else:
+            raise ValueError("Unknown shape of last_values?")
+        v_next = v_n + dt * (np.dot(self.KM, u_n) + self.F(t_n, t_n))
+        u_next = u_n + dt * v_next
+        return np.concatenate([u_next, v_next])
