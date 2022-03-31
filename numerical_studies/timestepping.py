@@ -169,48 +169,26 @@ class ERK(TimesteppingMethod):
         return u_next
 
 
-# class IRK(TimesteppingMethod):
-#     def __init__(
-#         self,
-#         first_order_matrix: np.ndarray,
-#         force_function: callable = None,
-#         order: int = 1,
-#     ):
-#         if not force_function:
-#             self.force_function = lambda t: 0 * t
-#         else:
-#             self.force_function = force_function
-#         # for the formulation: y' = Ay:
-#         self.first_order_matrix = first_order_matrix
-#         if order == 2:
-#             self.erk_step = self._trapezoidal
-#         elif order == 2:
-#             self.erk_step = self._erk2
-#         elif order == 4:
-#             self.erk_step = self._erk4
-#         else:
-#             raise NotImplementedError(
-#                 f"Currently only supports order 1,2,4, not {order}!"
-#             )
+class ImplicitMidpoint(TimesteppingMethod):
+    def __init__(
+        self,
+        first_order_matrix: np.ndarray,
+        force_function: callable = None,
+    ):
+        if not force_function:
+            self.force_function = lambda t: 0 * t
+        else:
+            self.force_function = force_function
+        # for the formulation: y' = Ay:
+        self.A = first_order_matrix
 
-#     def compute_timestep(self, dt: float, t_n: float, last_values: np.ndarray):
-#         next_values = self.erk_step(last_values, dt, t_n)
-#         return next_values
-
-#     def _trapezoidal(self):
-#         pass
-
-#     def _irk_gen(
-#         A: np.ndarray,
-#         b: np.ndarray,
-#         c: np.ndarray,
-#         ode: odes.ODE,
-#         u_i: np.ndarray,
-#         dt: float,
-#     ) -> np.ndarray:
-#         s = len(b)
-#         op = ode.operator()
-#         rhs = u_i * op * np.ones(b.shape)
-#         k = np.linalg.solve(np.eye(s) - dt * op * A, rhs)
-#         u_next = u_i + dt * np.dot(b, k)
-#         return u_next
+    def compute_timestep(self, dt: float, t_n: float, last_values: np.ndarray):
+        # rhs: (I+0.5*dt*A) * last_values + b = R * last_values + b
+        # compute contribution of force function to rhs
+        b = dt * self.force_function(t_n + dt/2, t_n)
+        R = np.eye(*self.A.shape) + 0.5 * dt * self.A
+        rhs = np.dot(R, last_values) + b
+        # finish system and solve: L * next_values = rhs
+        L = np.eye(*self.A.shape) - 0.5 * dt * self.A
+        next_values = np.linalg.solve(L, rhs)
+        return next_values
