@@ -23,7 +23,6 @@ class SystemPartition(ABC):
         if "sc" in kwargs:
             self.sc = kwargs["sc"]
         else:
-            print("Default: No subcycling")
             self.sc = 1
 
         self.interpolation_order = kwargs.get("interpolation_order", 0)
