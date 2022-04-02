@@ -18,7 +18,7 @@ I worked on this as part of the M.Sc. seminar "Partitioned Fluid-Structure Inter
 You can use a conda environment and the file `conda_environment.yml` to have all the necessary packages installed:
 
 ```bash
-$ conda create --name your_env_name --python=3.9 # or, e.g., 3.7
+$ conda create --name your_env_name --python=3.9
 $ conda activate your_env_name
 $ conda env update --file conda_environment.yml --name your_env_name
 ```
