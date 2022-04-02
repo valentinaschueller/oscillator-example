@@ -148,3 +148,58 @@ def partitioned_erk(
         [left_result[0], right_result[0], left_result[1], right_result[1]]
     )
     return full_result
+
+
+def partitioned_semi_implicit_euler(
+    t_end: float,
+    N: int,
+    partition_type: callable,
+    coupling_scheme_str: str = "",
+    **kwargs,
+):
+    run_simulation = return_simulation_runner(coupling_scheme_str)
+    left_system, right_system = return_system_partitions(
+        t_end, N, 2, partition_type, coupling_scheme_str, **kwargs
+    )
+
+    # create solvers
+    solver_left = SemiImplicitEuler(
+        left_system.A_first_order, left_system.second_order_force
+    )
+    solver_right = SemiImplicitEuler(
+        right_system.A_first_order, right_system.second_order_force
+    )
+    left_result, right_result = run_simulation(
+        left_system, solver_left, right_system, solver_right, t_end, N, **kwargs
+    )
+    full_result = np.array(
+        [left_result[0], right_result[0], left_result[1], right_result[1]]
+    )
+    return full_result
+
+def partitioned_implicit_midpoint(
+    t_end: float,
+    N: int,
+    partition_type: callable,
+    coupling_scheme_str: str = "",
+    **kwargs,
+):
+    run_simulation = return_simulation_runner(coupling_scheme_str)
+    left_system, right_system = return_system_partitions(
+        t_end, N, 2, partition_type, coupling_scheme_str, **kwargs
+    )
+
+    # create solvers
+    solver_left = ImplicitMidpoint(
+        left_system.A_first_order, left_system.first_order_force
+    )
+    solver_right = ImplicitMidpoint(
+        right_system.A_first_order, right_system.first_order_force
+    )
+    left_result, right_result = run_simulation(
+        left_system, solver_left, right_system, solver_right, t_end, N, **kwargs
+    )
+    full_result = np.array(
+        [left_result[0], right_result[0], left_result[1], right_result[1]]
+    )
+    return full_result
