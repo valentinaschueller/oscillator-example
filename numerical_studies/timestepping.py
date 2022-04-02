@@ -190,7 +190,7 @@ class ImplicitMidpoint(TimesteppingMethod):
         rhs = np.dot(R, last_values) + b
         # finish system and solve: L * next_values = rhs
         L = np.eye(*self.A.shape) - 0.5 * dt * self.A
-        next_values = np.linalg.solve(L, rhs)
+        next_values = np.linalg.solve(L, rhs.astype(float))
         return next_values
 
 
