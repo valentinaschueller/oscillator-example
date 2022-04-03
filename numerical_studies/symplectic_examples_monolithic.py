@@ -1,9 +1,5 @@
-from turtle import st
-
-from sympy import euler
-from same_timescales import SameTimescales, SameTimescalesPart, create_solution_plots
+from same_timescales import SameTimescales, create_solution_plots
 import timestepping
-import coupling_schemes
 import numpy as np
 import matplotlib.pyplot as plt
 
