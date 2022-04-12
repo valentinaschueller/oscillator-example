@@ -1,8 +1,14 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from same_timescales import SameTimescales
-from timestepping import ERK, GeneralizedAlpha, ImplicitMidpoint, NewmarkBeta
-from utility import max_norm, plot_error_ref, prepare_plot
+from timestepping import (
+    ERK,
+    GeneralizedAlpha,
+    ImplicitMidpoint,
+    NewmarkBeta,
+    SemiImplicitEuler,
+)
+from utility import max_norm
 
 
 def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
@@ -34,22 +40,33 @@ def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
             alpha_m,
             ode_system.second_order_force,
         )
-    elif solver_str == "erk4":
-        solver = ERK(
-            ode_system.A_first_order,
-            force_function=ode_system.first_order_force,
-            order=4,
-        )
     elif solver_str == "erk1":
         solver = ERK(
             ode_system.A_first_order,
-            force_function=ode_system.first_order_force,
+            ode_system.first_order_force,
             order=1,
+        )
+    elif solver_str == "heun":
+        solver = ERK(
+            ode_system.A_first_order,
+            ode_system.first_order_force,
+            order=2,
+        )
+    elif solver_str == "erk4":
+        solver = ERK(
+            ode_system.A_first_order,
+            ode_system.first_order_force,
+            order=4,
         )
     elif solver_str == "mid":
         solver = ImplicitMidpoint(
             ode_system.A_first_order,
-            force_function=ode_system.first_order_force,
+            ode_system.first_order_force,
+        )
+    elif solver_str == "sie":
+        solver = SemiImplicitEuler(
+            ode_system.A_first_order,
+            ode_system.second_order_force,
         )
     else:
         raise NotImplementedError(f"Solver {solver_str} not implemented!")
@@ -66,71 +83,18 @@ def compute_simulation_error(t_stop, N, solver_str):
     return true_sol - num_sol[0:4, :]
 
 
-def beautify_plot(ax):
-    # remove top and right spine
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.set_yticks([1e2, 1e0, 1e-2, 1e-4, 1e-6, 1e-8, 1e-10])
-    return ax
-
-
 if __name__ == "__main__":
     t_stop = 20
     N_list = np.array([125, 250, 500, 1000, 2000, 4000, 8000])
     dt_list = np.array([t_stop / N for N in N_list])
-    max_errors_newmark = np.array(
-        [max_norm(compute_simulation_error(t_stop, N, "newmark")) for N in N_list]
-    )
-    max_errors_alpha = np.array(
-        [max_norm(compute_simulation_error(t_stop, N, "alpha")) for N in N_list]
-    )
-    max_errors_erk4 = np.array(
-        [max_norm(compute_simulation_error(t_stop, N, "erk4")) for N in N_list]
-    )
-    max_errors_erk1 = np.array(
-        [max_norm(compute_simulation_error(t_stop, N, "erk1")) for N in N_list]
-    )
 
-    title = ""
-    subtitle = "Monolithic System"
-    xlabel = r"$\Delta t$"
-    ylabel = r"$\left\| e \right\|_\infty$"
-    fig, ax = prepare_plot(title, subtitle, xlabel, ylabel)
-    plot_error_ref(ax, dt_list)
-    ax.plot(
-        dt_list,
-        max_errors_erk1,
-        linestyle="none",
-        marker="3",
-        color="maroon",
-        label=r"ERK1",
-    )
-    ax.plot(
-        dt_list,
-        max_errors_newmark,
-        linestyle="none",
-        marker=".",
-        color="darkcyan",
-        label=r"Newmark-$\beta$",
-    )
-    ax.plot(
-        dt_list,
-        max_errors_alpha,
-        linestyle="none",
-        marker="x",
-        color="darkorchid",
-        label=r"generalized-$\alpha$",
-    )
-    ax.plot(
-        dt_list,
-        max_errors_erk4,
-        linestyle="none",
-        marker="1",
-        color="olive",
-        label=r"ERK4",
-    )
-    ax.legend(ncol=2, loc="lower right")
-    ax = beautify_plot(ax)
-    plt.savefig(
-        "convergence_same_timescales_monolithic.pdf", dpi=300, bbox_inches="tight"
-    )
+    # prepare dataframe for saving
+    errors_df = pd.DataFrame(index=dt_list)
+    errors_df.index.name = "dt"
+
+    method_names = ["newmark", "alpha", "erk4", "sie", "mid"]
+    for method_name in method_names:
+        errors_df["error"] = np.array(
+            [max_norm(compute_simulation_error(t_stop, N, method_name)) for N in N_list]
+        )
+        errors_df.to_csv(f"monolithic_same_{method_name}.csv", columns=["error"])
