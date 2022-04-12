@@ -32,7 +32,7 @@ def run_cps_simulation(
     :raises ValueError: if subcycling factor is invalid
     """
     sc = kwargs.get("sc", 1)
-    if type(sc) is not int or sc < 1:
+    if type(sc) not in (int, np.int64) or sc < 1:
         raise ValueError(f"subcycling factor must be a positive integer")
 
     dt = t_end / N
@@ -92,7 +92,7 @@ def run_css_simulation(
     :raises ValueError: if subcycling factor is invalid
     """
     sc = kwargs.get("sc", 1)
-    if type(sc) is not int or sc < 1:
+    if type(sc) not in (int, np.int64) or sc < 1:
         raise ValueError(f"subcycling factor must be a positive integer")
 
     dt = t_end / N
@@ -159,7 +159,7 @@ def run_implicit_cps_simulation(
     :raises ValueError: if subcycling factor is invalid
     """
     sc = kwargs.get("sc", 1)
-    if type(sc) is not int or sc < 1:
+    if type(sc) not in (int, np.int64) or sc < 1:
         raise ValueError(f"subcycling factor must be a positive integer")
 
     tol = kwargs.get("tol", 1e-8)
