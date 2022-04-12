@@ -1,7 +1,7 @@
-from same_timescales import SameTimescales, create_solution_plots
-import timestepping
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import timestepping
+from same_timescales import SameTimescales, create_solution_plots
 
 st_mono = SameTimescales()
 midpoint = timestepping.ImplicitMidpoint(
@@ -51,7 +51,7 @@ asol = st_mono.analytical_solution(t_end, N)
 u1 = asol[0]
 v1 = asol[2]
 axs[3].plot(u1, v1)
-axs[3].set_title(rf"Analytical solution")
+axs[3].set_title("Analytical solution")
 
 
 for ax in axs:

@@ -33,7 +33,7 @@ def run_cps_simulation(
     """
     sc = kwargs.get("sc", 1)
     if type(sc) not in (int, np.int64) or sc < 1:
-        raise ValueError(f"subcycling factor must be a positive integer")
+        raise ValueError("subcycling factor must be a positive integer")
 
     dt = t_end / N
     dt_sc = dt / sc
@@ -93,7 +93,7 @@ def run_css_simulation(
     """
     sc = kwargs.get("sc", 1)
     if type(sc) not in (int, np.int64) or sc < 1:
-        raise ValueError(f"subcycling factor must be a positive integer")
+        raise ValueError("subcycling factor must be a positive integer")
 
     dt = t_end / N
     dt_subcycling = dt / sc
@@ -160,7 +160,7 @@ def run_implicit_cps_simulation(
     """
     sc = kwargs.get("sc", 1)
     if type(sc) not in (int, np.int64) or sc < 1:
-        raise ValueError(f"subcycling factor must be a positive integer")
+        raise ValueError("subcycling factor must be a positive integer")
 
     tol = kwargs.get("tol", 1e-8)
     max_iters = kwargs.get("max_iters", 10)

@@ -1,16 +1,17 @@
-from coupling_schemes import *
-from timestepping import *
+import coupling_schemes as cs
+import numpy as np
+import timestepping as ts
 
 
 def return_simulation_runner(coupling_scheme_str: str):
     if coupling_scheme_str == "css":
-        run_simulation = run_css_simulation
+        run_simulation = cs.run_css_simulation
     elif coupling_scheme_str == "cps":
-        run_simulation = run_cps_simulation
+        run_simulation = cs.run_cps_simulation
     elif coupling_scheme_str == "strang":
-        run_simulation = run_strang_simulation
+        run_simulation = cs.run_strang_simulation
     elif coupling_scheme_str == "implicit-cps":
-        run_simulation = run_implicit_cps_simulation
+        run_simulation = cs.run_implicit_cps_simulation
     else:
         raise NotImplementedError(
             f"Coupling scheme {coupling_scheme_str} not implemented!"
@@ -50,7 +51,7 @@ def partitioned_newmark_beta(
     gamma = 0.5
     beta = 0.25
     # create solvers
-    solver_left = NewmarkBeta(
+    solver_left = ts.NewmarkBeta(
         left_system.A_second_order,
         left_system.M,
         left_system.K,
@@ -58,7 +59,7 @@ def partitioned_newmark_beta(
         gamma,
         left_system.second_order_force,
     )
-    solver_right = NewmarkBeta(
+    solver_right = ts.NewmarkBeta(
         right_system.A_second_order,
         right_system.M,
         right_system.K,
@@ -93,7 +94,7 @@ def partitioned_generalized_alpha(
     gamma = 0.5 - alpha_m + alpha_f
     beta = 0.25 * (gamma + 0.5) ** 2
     # create solvers
-    solver_left = GeneralizedAlpha(
+    solver_left = ts.GeneralizedAlpha(
         left_system.A_second_order,
         left_system.M,
         left_system.K,
@@ -103,7 +104,7 @@ def partitioned_generalized_alpha(
         alpha_m,
         left_system.second_order_force,
     )
-    solver_right = GeneralizedAlpha(
+    solver_right = ts.GeneralizedAlpha(
         right_system.A_second_order,
         right_system.M,
         right_system.K,
@@ -137,8 +138,10 @@ def partitioned_erk(
     )
 
     # create solvers
-    solver_left = ERK(left_system.A_first_order, left_system.first_order_force, order)
-    solver_right = ERK(
+    solver_left = ts.ERK(
+        left_system.A_first_order, left_system.first_order_force, order
+    )
+    solver_right = ts.ERK(
         right_system.A_first_order, right_system.first_order_force, order
     )
     left_result, right_result = run_simulation(
@@ -163,10 +166,10 @@ def partitioned_semi_implicit_euler(
     )
 
     # create solvers
-    solver_left = SemiImplicitEuler(
+    solver_left = ts.SemiImplicitEuler(
         left_system.A_first_order, left_system.second_order_force
     )
-    solver_right = SemiImplicitEuler(
+    solver_right = ts.SemiImplicitEuler(
         right_system.A_first_order, right_system.second_order_force
     )
     left_result, right_result = run_simulation(
@@ -191,10 +194,10 @@ def partitioned_implicit_midpoint(
     )
 
     # create solvers
-    solver_left = ImplicitMidpoint(
+    solver_left = ts.ImplicitMidpoint(
         left_system.A_first_order, left_system.first_order_force
     )
-    solver_right = ImplicitMidpoint(
+    solver_right = ts.ImplicitMidpoint(
         right_system.A_first_order, right_system.first_order_force
     )
     left_result, right_result = run_simulation(

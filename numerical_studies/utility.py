@@ -3,8 +3,8 @@ Created on Fri Apr 23 16:14:08 2021
 
 @author: valentina
 """
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def prepare_plot(title, subtitle, xlabel, ylabel):

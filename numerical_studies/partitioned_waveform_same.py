@@ -76,7 +76,4 @@ if __name__ == "__main__":
                 for N in N_list
             ]
         )
-        errors_df.to_csv(
-            f"partitioned_same_{method_name}_waveform.csv",
-            columns=["error"],
-        )
+        errors_df.to_csv(f"partitioned_same_{method_name}_waveform.csv")

@@ -1,10 +1,9 @@
 from pathlib import Path
-from matplotlib.pyplot import plot
-import numpy as np
 
+import numpy as np
 from monolithic_system import MonolithicSystem
 from system_partition import SystemPartition
-from utility import plot_displacements, plot_velocities, plot_energy
+from utility import plot_displacements, plot_energy, plot_velocities
 
 m1 = 1
 m2 = 1
