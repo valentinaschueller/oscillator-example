@@ -4,22 +4,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 st_mono = SameTimescales()
-midpoint = timestepping.ImplicitMidpoint(st_mono.A_first_order, st_mono.first_order_force)
-newmark = timestepping.NewmarkBeta(st_mono.A_second_order, st_mono.M, st_mono.K, 0.25, 0.5, st_mono.second_order_force)
+midpoint = timestepping.ImplicitMidpoint(
+    st_mono.A_first_order, st_mono.first_order_force
+)
+newmark = timestepping.NewmarkBeta(
+    st_mono.A_second_order, st_mono.M, st_mono.K, 0.25, 0.5, st_mono.second_order_force
+)
 erk1 = timestepping.ERK(st_mono.A_first_order, st_mono.first_order_force, 1)
 erk2 = timestepping.ERK(st_mono.A_first_order, st_mono.first_order_force, 2)
-euler_a = timestepping.SemiImplicitEuler(st_mono.A_first_order, st_mono.second_order_force)
+euler_a = timestepping.SemiImplicitEuler(
+    st_mono.A_first_order, st_mono.second_order_force
+)
 
 t_end = 200
 N = 1000
 t = np.linspace(0, t_end, N + 1)
 
-fig, axs = plt.subplots(1, 4, figsize=(30,10))
-fig.suptitle('Phase plots for the simple ODE system', fontsize=14)
+fig, axs = plt.subplots(1, 4, figsize=(30, 10))
+fig.suptitle("Phase plots for the simple ODE system", fontsize=14)
 
 nsol = st_mono.numerical_solution(t_end, N, midpoint)
 create_solution_plots(t, nsol)
-#create_solution_plots(t, asol, "analytical")
+# create_solution_plots(t, asol, "analytical")
 u1 = nsol[0]
 v1 = nsol[2]
 axs[0].plot(u1, v1)

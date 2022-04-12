@@ -177,6 +177,7 @@ def partitioned_semi_implicit_euler(
     )
     return full_result
 
+
 def partitioned_implicit_midpoint(
     t_end: float,
     N: int,

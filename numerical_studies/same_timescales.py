@@ -69,7 +69,9 @@ class SameTimescalesPart(SystemPartition):
         result_values: int = 0,
         **kwargs
     ):
-        super().__init__(left_system, t_end, N, result_values, k1, k2, k12, m1, m2, **kwargs)
+        super().__init__(
+            left_system, t_end, N, result_values, k1, k2, k12, m1, m2, **kwargs
+        )
 
     def _initial_conditions(self):
         if self.left_system_bool:
