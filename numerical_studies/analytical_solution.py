@@ -1,13 +1,12 @@
+import diff_timescales as dt
 import numpy as np
 import pandas as pd
-
 import same_timescales as st
-import diff_timescales as dt
 
 t_end = 20
 N = 1000
 
-t = np.linspace(0, t_end, N+1)
+t = np.linspace(0, t_end, N + 1)
 ana_sol_df = pd.DataFrame(index=t)
 ana_sol_df.index.name = "t"
 
