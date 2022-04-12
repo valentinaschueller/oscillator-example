@@ -3,3 +3,4 @@ dependencies:
     - numpy>=1.21
     - matplotlib>=3.4
     - sympy>=1.8
+    - pandas>=1.3
