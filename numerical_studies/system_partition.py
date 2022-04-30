@@ -44,20 +44,10 @@ class SystemPartition(ABC):
             # for the formulation: u'' = A_second_order * u:
             self.A_second_order = -(k2 + k12) * np.eye(1, 1, dtype=float)
 
-        if self.left_system_bool:
-            self.result = np.full((result_values, self.sc * N + 1), np.inf)
-            self.t_values = np.linspace(0, t_end, self.sc * N + 1)
-        else:
-            self.result = np.full((result_values, N + 1), np.inf)
-            self.t_values = np.linspace(0, t_end, N + 1)
-        if self.left_system_bool:
-            self.other_u = np.full(N + 1, np.inf)
-            self.other_t_values = np.linspace(0, t_end, N + 1)
-            self.other_dt = t_end / N
-        else:
-            self.other_u = np.full(self.sc * N + 1, np.inf)
-            self.other_t_values = np.linspace(0, t_end, self.sc * N + 1)
-            self.other_dt = t_end / (self.sc * N)
+        self.result = np.full((result_values, N + 1), np.inf)
+        self.t_values = np.linspace(0, t_end, N + 1)
+        self.dt = t_end / N
+        self.other_u = np.full(N + 1, np.inf)
         self.other_u[0] = self._initial_other_u()
         try:
             self.result[:, 0] = self._initial_conditions()
@@ -66,10 +56,7 @@ class SystemPartition(ABC):
 
     def other_u_at(self, t, t_lower):
         # get id of "left" u-value in current interval
-        idx = np.where(
-            self.other_t_values
-            == self.other_t_values[self.other_t_values <= (t_lower + 1e-10)].max()
-        )[0][0]
+        idx = np.where(np.abs(self.t_values - t_lower) < 1e-6)[0][0]
         if self.interpolation_order == 0:
             if self.other_u[idx + 1] == np.inf:
                 self.other_u[idx + 1] = self.other_u[idx]
@@ -82,11 +69,10 @@ class SystemPartition(ABC):
                     idx + 1
                 ] = previous_other_u  # constant extrapolation in first iteration
             next_other_u = self.other_u[idx + 1]
-            percentage = (t - t_lower) / self.other_dt
+            percentage = (t - t_lower) / self.dt
             interpolated_u = interpolate_linear(
                 previous_other_u, next_other_u, percentage
             )
-            # print(f"Using interpolated {interpolated_u} instead of {previous_other_u}, {next_other_u}")
             return interpolated_u
         else:
             raise NotImplementedError
