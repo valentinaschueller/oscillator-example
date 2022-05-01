@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import timestepping
-from same_timescales import SameTimescales, create_solution_plots
+from timescales import Timescales, create_solution_plots
 
-st_mono = SameTimescales()
+st_mono = Timescales()
 midpoint = timestepping.ImplicitMidpoint(
     st_mono.A_first_order, st_mono.first_order_force
 )

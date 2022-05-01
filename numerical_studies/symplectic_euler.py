@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from run_partitioned_simulation import partitioned_semi_implicit_euler
-from same_timescales import SameTimescalesPart, analytical_solution
+from timescales import TimescalesPart, analytical_solution
 
 if __name__ == "__main__":
     t_end = 40
@@ -17,13 +17,13 @@ if __name__ == "__main__":
 
     for coupling_scheme in ["cps", "css", "implicit-cps", "strang"]:
         nsol = partitioned_semi_implicit_euler(
-            t_end, N, SameTimescalesPart, coupling_scheme
+            t_end, N, TimescalesPart, coupling_scheme
         )
         phase_df["u1"] = nsol[0]
         phase_df["v1"] = nsol[2]
         phase_df.to_csv(f"phase_space_symplectic_euler_{coupling_scheme}.csv")
     nsol = partitioned_semi_implicit_euler(
-        t_end, N, SameTimescalesPart, "implicit-cps", interpolation_order=1
+        t_end, N, TimescalesPart, "implicit-cps", interpolation_order=1
     )
     phase_df["u1"] = nsol[0]
     phase_df["v1"] = nsol[2]

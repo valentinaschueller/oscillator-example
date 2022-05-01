@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from same_timescales import SameTimescales
+from timescales import Timescales
 from timestepping import (
     ERK,
     GeneralizedAlpha,
@@ -12,7 +12,7 @@ from utility import max_norm
 
 
 def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
-    ode_system = SameTimescales()
+    ode_system = Timescales()
 
     if solver_str == "newmark":
         newmark_gamma = 0.5
@@ -97,4 +97,4 @@ if __name__ == "__main__":
         errors_df["error"] = np.array(
             [max_norm(compute_simulation_error(t_stop, N, method_name)) for N in N_list]
         )
-        errors_df.to_csv(f"monolithic_same_{method_name}.csv")
+        errors_df.to_csv(f"monolithic_{method_name}.csv")

@@ -44,7 +44,7 @@ def analytical_solution(t_end: float, N: int):
     return result
 
 
-class SameTimescales(MonolithicSystem):
+class Timescales(MonolithicSystem):
     def __init__(self):
         super().__init__(k1, k2, k12, m1, m2)
 
@@ -59,7 +59,7 @@ class SameTimescales(MonolithicSystem):
         return np.concatenate([u0, v0, a0])
 
 
-class SameTimescalesPart(SystemPartition):
+class TimescalesPart(SystemPartition):
     def __init__(
         self,
         left_system: bool,

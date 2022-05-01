@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
 import run_partitioned_simulation as rps
-from same_timescales import SameTimescalesPart, analytical_solution
+from timescales import TimescalesPart, analytical_solution
 from utility import max_norm
 
 
 def compute_newmark_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
     num_sol = rps.partitioned_newmark_beta(
-        t_stop, N, SameTimescalesPart, coupling_scheme, **kwargs
+        t_stop, N, TimescalesPart, coupling_scheme, **kwargs
     )
     return true_sol - num_sol
 
@@ -16,7 +16,7 @@ def compute_newmark_error(t_stop: float, N: int, coupling_scheme: str, **kwargs)
 def compute_alpha_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
     num_sol = rps.partitioned_generalized_alpha(
-        t_stop, N, SameTimescalesPart, coupling_scheme, **kwargs
+        t_stop, N, TimescalesPart, coupling_scheme, **kwargs
     )
     return true_sol - num_sol
 
@@ -24,7 +24,7 @@ def compute_alpha_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
 def compute_erk4_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
     num_sol = rps.partitioned_erk(
-        t_stop, N, 4, SameTimescalesPart, coupling_scheme, **kwargs
+        t_stop, N, 4, TimescalesPart, coupling_scheme, **kwargs
     )
     return true_sol - num_sol
 
@@ -32,7 +32,7 @@ def compute_erk4_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
 def compute_sie_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
     num_sol = rps.partitioned_semi_implicit_euler(
-        t_stop, N, SameTimescalesPart, coupling_scheme, **kwargs
+        t_stop, N, TimescalesPart, coupling_scheme, **kwargs
     )
     return true_sol - num_sol
 
@@ -40,7 +40,7 @@ def compute_sie_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
 def compute_mid_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
     num_sol = rps.partitioned_implicit_midpoint(
-        t_stop, N, SameTimescalesPart, coupling_scheme, **kwargs
+        t_stop, N, TimescalesPart, coupling_scheme, **kwargs
     )
     return true_sol - num_sol
 
@@ -61,7 +61,8 @@ if __name__ == "__main__":
         "sie": compute_sie_error,
         "mid": compute_mid_error,
     }
-    coupling_scheme = "implicit-cps"
+
+    coupling_scheme = "strang"
     for method_name, method_func in method_name_and_func.items():
         errors_df["error"] = np.array(
             [
@@ -70,10 +71,9 @@ if __name__ == "__main__":
                         t_stop,
                         N,
                         coupling_scheme,
-                        interpolation_order=1,
                     )
                 )
                 for N in N_list
             ]
         )
-        errors_df.to_csv(f"partitioned_same_{method_name}_waveform.csv")
+        errors_df.to_csv(f"partitioned_{method_name}_{coupling_scheme}.csv")
