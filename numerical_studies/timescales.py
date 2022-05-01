@@ -62,18 +62,18 @@ class Timescales(MonolithicSystem):
 class TimescalesPart(SystemPartition):
     def __init__(
         self,
-        left_system: bool,
+        is_left_system: bool,
         t_end: float = 0.0,
         N: int = 0,
         result_values: int = 0,
         **kwargs
     ):
         super().__init__(
-            left_system, t_end, N, result_values, k1, k2, k12, m1, m2, **kwargs
+            is_left_system, t_end, N, result_values, k1, k2, k12, m1, m2, **kwargs
         )
 
     def _initial_conditions(self):
-        if self.left_system_bool:
+        if self.is_left_system:
             u0 = np.array([1.0])
         else:
             u0 = np.array([0.0])
@@ -82,7 +82,7 @@ class TimescalesPart(SystemPartition):
         return np.concatenate([u0, v0, a0])
 
     def _initial_other_u(self):
-        if not self.left_system_bool:
+        if not self.is_left_system:
             return 1.0
         else:
             return 0.0

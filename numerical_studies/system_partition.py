@@ -7,7 +7,7 @@ from utility import interpolate_linear
 class SystemPartition(ABC):
     def __init__(
         self,
-        left_system: bool,
+        is_left_system: bool,
         t_end: float = 0.0,
         N: int = 0,
         result_values: int = 0,
@@ -18,11 +18,11 @@ class SystemPartition(ABC):
         m2: int = 1,
         **kwargs
     ):
-        self.left_system_bool = left_system
+        self.is_left_system = is_left_system
         self.k12 = k12
         self.interpolation_order = kwargs.get("interpolation_order", 0)
 
-        if left_system:
+        if self.is_left_system:
             # for the formulation: Mu'' + Ku = 0:
             self.M = m1 * np.eye(1, 1, dtype=float)
             self.K = (k1 + k12) * np.eye(1, 1, dtype=float)
