@@ -20,11 +20,6 @@ class SystemPartition(ABC):
     ):
         self.left_system_bool = left_system
         self.k12 = k12
-        if "sc" in kwargs:
-            self.sc = kwargs["sc"]
-        else:
-            self.sc = 1
-
         self.interpolation_order = kwargs.get("interpolation_order", 0)
 
         if left_system:
