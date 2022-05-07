@@ -11,8 +11,8 @@ def run_cps_simulation(
     solver_2: TimesteppingMethod,
     t_end: float,
     N: int,
-    **kwargs
-) -> tuple[np.ndarray, np.ndarray]:
+    **kwargs,
+):
     """
     run a partitioned simulation with the conventional parallel staggered (CPS) scheme
 
@@ -55,7 +55,7 @@ def run_css_simulation(
     t_end: float,
     N: int,
     **kwargs
-) -> tuple[np.ndarray, np.ndarray]:
+):
     """
     run a partitioned simulation with the conventional serial staggered (CSS) scheme
 
