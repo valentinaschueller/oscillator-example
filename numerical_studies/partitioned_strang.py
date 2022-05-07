@@ -46,8 +46,14 @@ def compute_mid_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
 
 
 if __name__ == "__main__":
-    t_stop = 20
-    N_list = np.array([125, 250, 500, 1000, 2000, 4000, 8000])
+    """
+    Runs partitioned experiment for oscillator example with different time stepping schemes using Strang splitting.
+    Performs convergence study and outputs error w.r.t analytical solution.
+    """
+    #t_stop = 20
+    #N_list = np.array([125, 250, 500, 1000, 2000, 4000, 8000])
+    t_stop = 1
+    N_list = np.array([25, 50, 100, 200, 400, 800, 1600, 3200, 6400])
     dt_list = np.array([t_stop / N for N in N_list])
 
     # prepare dataframe for saving

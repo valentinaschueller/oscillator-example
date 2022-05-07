@@ -121,7 +121,7 @@ def run_implicit_cps_simulation(
     """
 
     tol = kwargs.get("tol", 1e-8)
-    max_iters = kwargs.get("max_iters", 10)
+    max_iters = kwargs.get("max_iters", 100)  # larger number of iterations is needed for waveform iterations
 
     dt = t_end / N
     t = 0
@@ -148,6 +148,9 @@ def run_implicit_cps_simulation(
             k += 1
         n += 1
         t += dt
+        if(k == max_iters):
+            print("WARNING!")
+            print("dt={}".format(dt))
     return partition_1.result, partition_2.result
 
 

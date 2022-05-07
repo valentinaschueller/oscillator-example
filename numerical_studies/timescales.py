@@ -7,9 +7,9 @@ from utility import plot_displacements, plot_energy, plot_velocities
 
 m1 = 1
 m2 = 1
-k1 = 1
-k2 = 1
-k12 = 4
+k1 = 4*np.pi**2
+k2 = 4*np.pi**2
+k12 = 16*(np.pi**2)
 M = np.array([[m1, 0], [0, m2]], dtype=float)
 K = np.array([[(k1 + k12), -k12], [-k12, (k2 + k12)]], dtype=float)
 
@@ -35,10 +35,10 @@ def analytical_solution(t_end: float, N: int):
     t = np.linspace(0, t_end, N + 1)
     result = np.array(
         [
-            0.5 * (np.cos(t) + np.cos(3 * t)),
-            0.5 * (np.cos(t) - np.cos(3 * t)),
-            0.5 * (-np.sin(t) - 3 * np.sin(3 * t)),
-            0.5 * (-np.sin(t) + 3 * np.sin(3 * t)),
+            0.5 * (np.cos(2 * np.pi * t) + np.cos(6 * np.pi * t)),
+            0.5 * (np.cos(2 * np.pi * t) - np.cos(6 * np.pi * t)),
+            0.5 * (-2 * np.pi * np.sin(2 * np.pi * t) - 6 * np.pi * np.sin(6 * np.pi * t)),
+            0.5 * (-2 * np.pi * np.sin(2 * np.pi * t) + 6 * np.pi * np.sin(6 * np.pi * t)),
         ]
     )
     return result
