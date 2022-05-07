@@ -8,7 +8,7 @@ from timestepping import (
     NewmarkBeta,
     SemiImplicitEuler,
 )
-from utility import max_norm
+from utility import max_norm, comment_meta_information
 
 
 def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
@@ -104,3 +104,4 @@ if __name__ == "__main__":
             [max_norm(compute_simulation_error(t_stop, N, method_name)) for N in N_list]
         )
         errors_df.to_csv(f"monolithic_{method_name}.csv")
+        comment_meta_information(method_name, __file__, f"monolithic_{method_name}.csv")

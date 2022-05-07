@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import run_partitioned_simulation as rps
 from timescales import TimescalesPart, analytical_solution
-from utility import max_norm
+from utility import max_norm, comment_meta_information
 
 
 def compute_newmark_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
@@ -83,3 +83,4 @@ if __name__ == "__main__":
             ]
         )
         errors_df.to_csv(f"partitioned_{method_name}_{coupling_scheme}.csv")
+        comment_meta_information(method_name+'_'+coupling_scheme, __file__, f"partitioned_{method_name}_{coupling_scheme}.csv")
