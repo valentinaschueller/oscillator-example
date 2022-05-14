@@ -1,47 +1,38 @@
 import numpy as np
 import pandas as pd
+
 import run_partitioned_simulation as rps
-from timescales import TimescalesPart, analytical_solution
-from utility import max_norm, comment_meta_information
+from oscillator import analytical_solution
+from utility import comment_meta_information, max_norm
 
 
 def compute_newmark_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_newmark_beta(
-        t_stop, N, TimescalesPart, coupling_scheme, **kwargs
-    )
+    num_sol = rps.partitioned_newmark_beta(t_stop, N, coupling_scheme, **kwargs)
     return true_sol - num_sol
 
 
 def compute_alpha_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_generalized_alpha(
-        t_stop, N, TimescalesPart, coupling_scheme, **kwargs
-    )
+    num_sol = rps.partitioned_generalized_alpha(t_stop, N, coupling_scheme, **kwargs)
     return true_sol - num_sol
 
 
 def compute_erk4_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_erk(
-        t_stop, N, 4, TimescalesPart, coupling_scheme, **kwargs
-    )
+    num_sol = rps.partitioned_erk(t_stop, N, 4, coupling_scheme, **kwargs)
     return true_sol - num_sol
 
 
 def compute_sie_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_semi_implicit_euler(
-        t_stop, N, TimescalesPart, coupling_scheme, **kwargs
-    )
+    num_sol = rps.partitioned_semi_implicit_euler(t_stop, N, coupling_scheme, **kwargs)
     return true_sol - num_sol
 
 
 def compute_mid_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
     true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_implicit_midpoint(
-        t_stop, N, TimescalesPart, coupling_scheme, **kwargs
-    )
+    num_sol = rps.partitioned_implicit_midpoint(t_stop, N, coupling_scheme, **kwargs)
     return true_sol - num_sol
 
 
@@ -50,8 +41,8 @@ if __name__ == "__main__":
     Runs partitioned experiment for oscillator example with different time stepping schemes using waveform iterations.
     Performs convergence study and outputs error w.r.t analytical solution.
     """
-    #t_stop = 20
-    #N_list = np.array([125, 250, 500, 1000, 2000, 4000, 8000])
+    # t_stop = 20
+    # N_list = np.array([125, 250, 500, 1000, 2000, 4000, 8000])
     t_stop = 1
     N_list = np.array([25, 50, 100, 200, 400, 800, 1600, 3200, 6400])
     dt_list = np.array([t_stop / N for N in N_list])
@@ -83,4 +74,8 @@ if __name__ == "__main__":
             ]
         )
         errors_df.to_csv(f"partitioned_{method_name}_waveform.csv")
-        comment_meta_information(method_name+'_waveform', __file__, f"partitioned_{method_name}_waveform.csv")
+        comment_meta_information(
+            method_name + "_waveform",
+            __file__,
+            f"partitioned_{method_name}_waveform.csv",
+        )

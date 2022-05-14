@@ -1,13 +1,14 @@
 import numpy as np
-from system_partition import SystemPartition
+
+from oscillator import PartitionedOscillator
 from timestepping import TimesteppingMethod
 from utility import l2_norm
 
 
 def run_cps_simulation(
-    partition_1: SystemPartition,
+    partition_1: PartitionedOscillator,
     solver_1: TimesteppingMethod,
-    partition_2: SystemPartition,
+    partition_2: PartitionedOscillator,
     solver_2: TimesteppingMethod,
     t_end: float,
     N: int,
@@ -48,13 +49,13 @@ def run_cps_simulation(
 
 
 def run_css_simulation(
-    partition_1: SystemPartition,
+    partition_1: PartitionedOscillator,
     solver_1: TimesteppingMethod,
-    partition_2: SystemPartition,
+    partition_2: PartitionedOscillator,
     solver_2: TimesteppingMethod,
     t_end: float,
     N: int,
-    **kwargs
+    **kwargs,
 ):
     """
     run a partitioned simulation with the conventional serial staggered (CSS) scheme
@@ -93,13 +94,13 @@ def run_css_simulation(
 
 
 def run_implicit_cps_simulation(
-    partition_1: SystemPartition,
+    partition_1: PartitionedOscillator,
     solver_1: TimesteppingMethod,
-    partition_2: SystemPartition,
+    partition_2: PartitionedOscillator,
     solver_2: TimesteppingMethod,
     t_end: float,
     N: int,
-    **kwargs
+    **kwargs,
 ):
     """
     run a partitioned simulation with the implicit conventional parallel staggered (CPS) scheme
@@ -121,7 +122,9 @@ def run_implicit_cps_simulation(
     """
 
     tol = kwargs.get("tol", 1e-8)
-    max_iters = kwargs.get("max_iters", 100)  # larger number of iterations is needed for waveform iterations
+    max_iters = kwargs.get(
+        "max_iters", 100
+    )  # larger number of iterations is needed for waveform iterations
 
     dt = t_end / N
     t = 0
@@ -148,20 +151,20 @@ def run_implicit_cps_simulation(
             k += 1
         n += 1
         t += dt
-        if(k == max_iters):
+        if k == max_iters:
             print("WARNING!")
             print("dt={}".format(dt))
     return partition_1.result, partition_2.result
 
 
 def run_strang_simulation(
-    partition_1: SystemPartition,
+    partition_1: PartitionedOscillator,
     solver_1: TimesteppingMethod,
-    partition_2: SystemPartition,
+    partition_2: PartitionedOscillator,
     solver_2: TimesteppingMethod,
     t_end: float,
     N: int,
-    **kwargs
+    **kwargs,
 ):
     """
     run a partitioned simulation with Strang splitting

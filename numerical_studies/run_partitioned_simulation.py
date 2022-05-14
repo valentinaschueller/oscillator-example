@@ -1,6 +1,8 @@
-import coupling_schemes as cs
 import numpy as np
+
+import coupling_schemes as cs
 import timestepping as ts
+from oscillator import PartitionedOscillator
 
 
 def return_simulation_runner(coupling_scheme_str: str):
@@ -23,29 +25,27 @@ def return_system_partitions(
     t_end: float,
     N: int,
     result_values: int,
-    partition_type: callable,
     coupling_scheme_str: str,
     **kwargs,
 ):
     if coupling_scheme_str == "strang":
-        left_system = partition_type(True, t_end, 2 * N, result_values, **kwargs)
-        right_system = partition_type(False, t_end, N, result_values, **kwargs)
+        left_system = PartitionedOscillator(True, t_end, 2 * N, result_values, **kwargs)
+        right_system = PartitionedOscillator(False, t_end, N, result_values, **kwargs)
     else:
-        left_system = partition_type(True, t_end, N, result_values, **kwargs)
-        right_system = partition_type(False, t_end, N, result_values, **kwargs)
+        left_system = PartitionedOscillator(True, t_end, N, result_values, **kwargs)
+        right_system = PartitionedOscillator(False, t_end, N, result_values, **kwargs)
     return left_system, right_system
 
 
 def partitioned_newmark_beta(
     t_end: float,
     N: int,
-    partition_type: callable,
     coupling_scheme_str: str = "",
     **kwargs,
 ):
     run_simulation = return_simulation_runner(coupling_scheme_str)
     left_system, right_system = return_system_partitions(
-        t_end, N, 3, partition_type, coupling_scheme_str, **kwargs
+        t_end, N, 3, coupling_scheme_str, **kwargs
     )
 
     gamma = 0.5
@@ -80,13 +80,12 @@ def partitioned_newmark_beta(
 def partitioned_generalized_alpha(
     t_end: float,
     N: int,
-    partition_type: callable,
     coupling_scheme_str: str = "",
     **kwargs,
 ):
     run_simulation = return_simulation_runner(coupling_scheme_str)
     left_system, right_system = return_system_partitions(
-        t_end, N, 3, partition_type, coupling_scheme_str, **kwargs
+        t_end, N, 3, coupling_scheme_str, **kwargs
     )
 
     alpha_m = 0.2
@@ -128,13 +127,12 @@ def partitioned_erk(
     t_end: float,
     N: int,
     order: int,
-    partition_type: callable,
     coupling_scheme_str: str = "",
     **kwargs,
 ):
     run_simulation = return_simulation_runner(coupling_scheme_str)
     left_system, right_system = return_system_partitions(
-        t_end, N, 2, partition_type, coupling_scheme_str, **kwargs
+        t_end, N, 2, coupling_scheme_str, **kwargs
     )
 
     # create solvers
@@ -156,13 +154,12 @@ def partitioned_erk(
 def partitioned_semi_implicit_euler(
     t_end: float,
     N: int,
-    partition_type: callable,
     coupling_scheme_str: str = "",
     **kwargs,
 ):
     run_simulation = return_simulation_runner(coupling_scheme_str)
     left_system, right_system = return_system_partitions(
-        t_end, N, 2, partition_type, coupling_scheme_str, **kwargs
+        t_end, N, 2, coupling_scheme_str, **kwargs
     )
 
     # create solvers
@@ -184,13 +181,12 @@ def partitioned_semi_implicit_euler(
 def partitioned_implicit_midpoint(
     t_end: float,
     N: int,
-    partition_type: callable,
     coupling_scheme_str: str = "",
     **kwargs,
 ):
     run_simulation = return_simulation_runner(coupling_scheme_str)
     left_system, right_system = return_system_partitions(
-        t_end, N, 2, partition_type, coupling_scheme_str, **kwargs
+        t_end, N, 2, coupling_scheme_str, **kwargs
     )
 
     # create solvers

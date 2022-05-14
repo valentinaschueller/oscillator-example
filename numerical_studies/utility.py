@@ -90,22 +90,27 @@ def interpolate_linear(left_value, right_value, percentage):
         return right_value
     else:
         return percentage * right_value + (1 - percentage) * left_value
-        
+
+
 def comment_meta_information(experiment_name, runner, file_path):
     import git
-    repo = git.Repo('..')
+
+    repo = git.Repo("..")
     chash = str(repo.head.commit)[:7]
     if repo.is_dirty():
         chash += "-dirty"
-        
+
     repourl = repo.remotes.origin.url
-        
-    metainfo ='''# git repo: {}
+
+    metainfo = """# git repo: {}
 # git commit: {}
 # experiment: {}
 # runner: {}
-'''.format(repourl, chash, experiment_name, runner)
-    
-    with open(file_path, 'r') as original: data = original.read()
-    with open(file_path, 'w') as modified: modified.write(metainfo + data)
+""".format(
+        repourl, chash, experiment_name, runner
+    )
 
+    with open(file_path, "r") as original:
+        data = original.read()
+    with open(file_path, "w") as modified:
+        modified.write(metainfo + data)
