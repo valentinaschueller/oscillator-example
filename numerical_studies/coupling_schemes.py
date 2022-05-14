@@ -157,7 +157,7 @@ def run_implicit_cps_simulation(
         t += dt
         if k == max_iters:
             print("WARNING!")
-            print("dt={}".format(dt))
+            print(f"dt = {dt}")
     return partition_1.result, partition_2.result
 
 
