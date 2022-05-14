@@ -1,14 +1,41 @@
+"""
+Interface and implementations of time integration methods.
+"""
+
 from abc import ABC, abstractmethod
 
 import numpy as np
 
 
 class TimesteppingMethod(ABC):
+    """
+    Interface class for one-step time integration methods.
+    """
+
     @abstractmethod
-    def compute_timestep(self, dt: float, t_n: float, last_values: np.ndarray):
+    def compute_timestep(
+        self, dt: float, t_n: float, last_values: np.ndarray
+    ) -> np.ndarray:
+        """
+        do a single time step.
+
+        :param dt: time step size
+        :param t_n: current simulation time
+        :param last_values: values of the unknowns at time t_n
+        :returns: new values of the unknowns at time t_n + dt
+        """
         pass
 
     def integrate(self, dt: float, N: int, io_array: np.ndarray) -> None:
+        """
+        integrate from 0 to N*dt.
+
+        repeatedly calls compute_timestep and stores the values in io_array.
+
+        :param dt: time step size
+        :param N: number of time steps that shall be executed
+        :param io_array: preallocated array to store the results in. (should be N+1 long and contain an initial condition)
+        """
         t_n = 0.0
         for n in range(0, N):
             io_array[:, n + 1] = self.compute_timestep(dt, t_n, io_array[:, n])
@@ -16,6 +43,10 @@ class TimesteppingMethod(ABC):
 
 
 class GeneralizedAlpha(TimesteppingMethod):
+    """
+    Generalized-alpha method for a system Mu'' + Ku = F.
+    """
+
     def __init__(
         self,
         A_second_order: np.ndarray,
@@ -40,10 +71,12 @@ class GeneralizedAlpha(TimesteppingMethod):
 
     def compute_timestep(self, dt: float, t_n: float, last_values: np.ndarray):
         if last_values.size == 6:
+            # for the monoltihic system
             u_n = last_values[[0, 1]]
             v_n = last_values[[2, 3]]
             a_n = last_values[[4, 5]]
         elif last_values.size == 3:
+            # for the partitioned system
             u_n = last_values[0]
             v_n = last_values[1]
             a_n = last_values[2]
@@ -80,6 +113,10 @@ class GeneralizedAlpha(TimesteppingMethod):
 
 
 class NewmarkBeta(GeneralizedAlpha):
+    """
+    Newmark-beta method for a system Mu'' + Ku = F
+    """
+
     def __init__(
         self,
         A_second_order: np.ndarray,
@@ -93,6 +130,16 @@ class NewmarkBeta(GeneralizedAlpha):
 
 
 class ERK(TimesteppingMethod):
+    """
+    Explicit Runge-Kutta methods.
+
+    can be instantiated by providing the order.
+    supported:
+    - order=1: explicit Euler
+    - order=2: Heun's method
+    - order=4: classical Runge-Kutta method
+    """
+
     def __init__(
         self,
         first_order_matrix: np.ndarray,
@@ -155,6 +202,9 @@ class ERK(TimesteppingMethod):
     def _erk_gen(
         self, A: np.ndarray, b, c, u_i: np.ndarray, dt: float, t_i: float
     ) -> np.ndarray:
+        """
+        implements the general explicit Runge-Kutta step.
+        """
         k = np.zeros(b.shape + u_i.shape, dtype=u_i.dtype)
         k[0] = self.du_dt(u_i, t_i, t_i)
         if len(b) > 1:
@@ -170,6 +220,12 @@ class ERK(TimesteppingMethod):
 
 
 class ImplicitMidpoint(TimesteppingMethod):
+    """
+    implicit midpoint method for a system y'=Ay.
+
+    O(dt**2), symplectic.
+    """
+
     def __init__(
         self,
         first_order_matrix: np.ndarray,
@@ -198,6 +254,7 @@ class SemiImplicitEuler(TimesteppingMethod):
     """
     semi-implicit Euler method/symplectic Euler method/Euler-A method
 
+    O(dt), symplectic.
     https://en.wikipedia.org/wiki/Semi-implicit_Euler_method
     """
 

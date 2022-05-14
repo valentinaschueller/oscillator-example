@@ -1,7 +1,5 @@
 """
-Created on Fri Apr 23 16:14:08 2021
-
-@author: valentina
+Helper functions for plotting, output, and common computations.
 """
 import matplotlib.pyplot as plt
 import numpy as np
@@ -71,19 +69,33 @@ def plot_energy(t, energy, path="."):
     plt.close()
 
 
-def l1_norm(vec):
+def l1_norm(vec: np.ndarray) -> float:
+    """
+    computes the L1-norm (Manhattan norm) of the input vector
+    """
     return np.sum(np.abs(vec))
 
 
-def l2_norm(vec):
+def l2_norm(vec: np.ndarray) -> float:
+    """
+    computes the L2-norm (Euclidian norm) of the input vector
+    """
     return np.sqrt(np.sum(vec**2))
 
 
-def max_norm(vec):
+def max_norm(vec: np.ndarray) -> float:
+    """
+    computes the maximum norm (infinity norm) of the input vector
+    """
     return np.max(np.abs(vec))
 
 
-def interpolate_linear(left_value, right_value, percentage):
+def interpolate_linear(
+    left_value: float, right_value: float, percentage: float
+) -> float:
+    """
+    interpolate linearly between left_value and right_value at given percentage
+    """
     if percentage == 0:
         return left_value
     elif percentage == 1:
