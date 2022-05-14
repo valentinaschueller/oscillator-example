@@ -1,40 +1,8 @@
 import numpy as np
 import pandas as pd
 
-import run_partitioned_simulation as rps
-from oscillator import analytical_solution
+import compute_partitioned_errors as cpe
 from utility import comment_meta_information, max_norm
-
-
-def compute_newmark_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_newmark_beta(t_stop, N, coupling_scheme, **kwargs)
-    return true_sol - num_sol
-
-
-def compute_alpha_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_generalized_alpha(t_stop, N, coupling_scheme, **kwargs)
-    return true_sol - num_sol
-
-
-def compute_erk4_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_erk(t_stop, N, 4, coupling_scheme, **kwargs)
-    return true_sol - num_sol
-
-
-def compute_sie_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_semi_implicit_euler(t_stop, N, coupling_scheme, **kwargs)
-    return true_sol - num_sol
-
-
-def compute_mid_error(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    true_sol = analytical_solution(t_stop, N)
-    num_sol = rps.partitioned_implicit_midpoint(t_stop, N, coupling_scheme, **kwargs)
-    return true_sol - num_sol
-
 
 if __name__ == "__main__":
     """
@@ -52,11 +20,11 @@ if __name__ == "__main__":
     errors_df.index.name = "dt"
 
     method_name_and_func = {
-        "newmark": compute_newmark_error,
-        "alpha": compute_alpha_error,
-        "erk4": compute_erk4_error,
-        "sie": compute_sie_error,
-        "mid": compute_mid_error,
+        "newmark": cpe.compute_newmark_error,
+        "alpha": cpe.compute_alpha_error,
+        "erk4": cpe.compute_erk4_error,
+        "sie": cpe.compute_sie_error,
+        "mid": cpe.compute_mid_error,
     }
 
     coupling_scheme = "strang"
