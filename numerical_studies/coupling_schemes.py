@@ -1,3 +1,7 @@
+"""
+coupling schemes used by the simulation runners for partitioned simulations.
+"""
+
 import numpy as np
 
 from oscillator import PartitionedOscillator

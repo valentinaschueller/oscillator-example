@@ -1,3 +1,7 @@
+"""
+simulation runners for partitioned simulations.
+"""
+
 import numpy as np
 
 import coupling_schemes as cs

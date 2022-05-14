@@ -1,3 +1,10 @@
+"""
+analytical solution and ODE system classes for the monolithic and partitioned oscillator.
+
+the analytical solution has to be changed manually but the mass/stiffness parameters can be
+changed at the top of the module.
+"""
+
 from pathlib import Path
 
 import numpy as np
@@ -5,6 +12,7 @@ import numpy as np
 from timestepping import TimesteppingMethod
 from utility import interpolate_linear, plot_displacements, plot_energy, plot_velocities
 
+# mass and stiffness parameters
 m1 = 1
 m2 = 1
 k1 = 4 * np.pi**2
@@ -12,6 +20,12 @@ k2 = 4 * np.pi**2
 k12 = 16 * (np.pi**2)
 M = np.array([[m1, 0], [0, m2]], dtype=float)
 K = np.array([[(k1 + k12), -k12], [-k12, (k2 + k12)]], dtype=float)
+
+# initial conditions
+u1_0 = 1.0
+u2_0 = 0.0
+v1_0 = 0.0
+v2_0 = 0.0
 
 
 def compute_energy(u1, u2, v1, v2):
@@ -74,8 +88,8 @@ class MonolithicOscillator:
         return np.array([0.0, 0.0, 0.0, 0.0])
 
     def _initial_conditions(self):
-        u0 = np.array([1.0, 0.0])
-        v0 = np.array([0.0, 0.0])
+        u0 = np.array([u1_0, u2_0])
+        v0 = np.array([v1_0, v2_0])
         a0 = np.dot(self.A_second_order, u0)
         return np.concatenate([u0, v0, a0])
 
@@ -173,10 +187,11 @@ class PartitionedOscillator:
 
     def _initial_conditions(self):
         if self.is_left_system:
-            u0 = np.array([1.0])
+            u0 = np.array([u1_0])
+            v0 = np.array([v1_0])
         else:
-            u0 = np.array([0.0])
-        v0 = np.array([0.0])
+            u0 = np.array([u2_0])
+            v0 = np.array([v2_0])
         a0 = np.dot(self.A_second_order, u0) + self.k12 * self._initial_other_u()
         return np.concatenate([u0, v0, a0])
 
