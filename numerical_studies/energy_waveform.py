@@ -1,34 +1,8 @@
 import numpy as np
 import pandas as pd
 
-import run_partitioned_simulation as rps
+import compute_trajectories as ct
 from utility import comment_meta_information
-
-
-def compute_newmark_trajectory(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    num_sol = rps.partitioned_newmark_beta(t_stop, N, coupling_scheme, **kwargs)
-    return num_sol
-
-
-def compute_alpha_trajectory(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    num_sol = rps.partitioned_generalized_alpha(t_stop, N, coupling_scheme, **kwargs)
-    return num_sol
-
-
-def compute_erk4_trajectory(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    num_sol = rps.partitioned_erk(t_stop, N, 4, coupling_scheme, **kwargs)
-    return num_sol
-
-
-def compute_sie_trajectory(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    num_sol = rps.partitioned_semi_implicit_euler(t_stop, N, coupling_scheme, **kwargs)
-    return num_sol
-
-
-def compute_mid_trajectory(t_stop: float, N: int, coupling_scheme: str, **kwargs):
-    num_sol = rps.partitioned_implicit_midpoint(t_stop, N, coupling_scheme, **kwargs)
-    return num_sol
-
 
 if __name__ == "__main__":
     """
@@ -47,9 +21,9 @@ if __name__ == "__main__":
     trajectory_df.index.name = "t"
 
     method_name_and_func = {
-        "alpha": compute_alpha_trajectory,
-        "sie": compute_sie_trajectory,
-        "mid": compute_mid_trajectory,
+        "alpha": ct.compute_alpha_trajectory,
+        "sie": ct.compute_sie_trajectory,
+        "mid": ct.compute_mid_trajectory,
     }
     coupling_scheme = "implicit-cps"
     for method_name, method_func in method_name_and_func.items():
