@@ -36,10 +36,10 @@ def plot_error_ref(ax, dt):
     o2 = dt * dt
     o3 = dt**3
     o4 = dt**4
-    ax.loglog(dt, o1, "k-", label="$\mathcal{O}(\Delta t)$", lw=1)
-    ax.loglog(dt, o2, "k--", label="$\mathcal{O}(\Delta t^2)$", lw=1)
-    ax.loglog(dt, o3, "k:", label="$\mathcal{O}(\Delta t^3)$", lw=1)
-    ax.loglog(dt, o4, "k-.", label="$\mathcal{O}(\Delta t^4)$", lw=1)
+    ax.loglog(dt, o1, "k-", label=r"$\mathcal{O}(\Delta t)$", lw=1)
+    ax.loglog(dt, o2, "k--", label=r"$\mathcal{O}(\Delta t^2)$", lw=1)
+    ax.loglog(dt, o3, "k:", label=r"$\mathcal{O}(\Delta t^3)$", lw=1)
+    ax.loglog(dt, o4, "k-.", label=r"$\mathcal{O}(\Delta t^4)$", lw=1)
     return ax
 
 
