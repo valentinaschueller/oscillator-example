@@ -14,7 +14,7 @@ This repository can be used to understand and reproduce the results of our paper
   - Matplotlib (we used version 3.4.3)
   - Pandas (we used version 1.3.5)
 - The project requires Python 3.6 or later due to the use of [f-strings, PEP 498](https://peps.python.org/pep-0498/) in the code
-- For formatting we used [black](https://github.com/psf/black), for imports [isort](https://pycqa.github.io/isort/). Both can be installed via `pip`.
+- For formatting we use [autopep8](https://github.com/hhatto/autopep8), for imports [isort v5.10.1](https://pycqa.github.io/isort/). Refer to [our CI pipeline](https://github.com/valentinaschueller/oscillator-example/blob/main/.github/workflows/check-pep8.yml) for the options in use.
 
 You can use a conda environment and the file `conda_environment.yml` to have all the necessary packages installed:
 

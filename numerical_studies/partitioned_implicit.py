@@ -1,7 +1,6 @@
+import compute_partitioned_errors as cpe
 import numpy as np
 import pandas as pd
-
-import compute_partitioned_errors as cpe
 from utility import comment_meta_information, max_norm
 
 if __name__ == "__main__":

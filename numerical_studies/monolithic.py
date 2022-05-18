@@ -1,14 +1,8 @@
 import numpy as np
 import pandas as pd
-
 from oscillator import MonolithicOscillator
-from timestepping import (
-    ERK,
-    GeneralizedAlpha,
-    ImplicitMidpoint,
-    NewmarkBeta,
-    SemiImplicitEuler,
-)
+from timestepping import (ERK, GeneralizedAlpha, ImplicitMidpoint, NewmarkBeta,
+                          SemiImplicitEuler)
 from utility import comment_meta_information, max_norm
 
 

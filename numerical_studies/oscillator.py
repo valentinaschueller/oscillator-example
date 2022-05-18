@@ -8,9 +8,9 @@ changed at the top of the module.
 from pathlib import Path
 
 import numpy as np
-
 from timestepping import TimesteppingMethod
-from utility import interpolate_linear, plot_displacements, plot_energy, plot_velocities
+from utility import (interpolate_linear, plot_displacements, plot_energy,
+                     plot_velocities)
 
 # mass and stiffness parameters
 m1 = 1

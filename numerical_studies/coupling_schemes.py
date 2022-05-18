@@ -3,7 +3,6 @@ coupling schemes used by the simulation runners for partitioned simulations.
 """
 
 import numpy as np
-
 from oscillator import PartitionedOscillator
 from timestepping import TimesteppingMethod
 from utility import l2_norm

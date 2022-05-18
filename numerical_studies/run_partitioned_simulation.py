@@ -2,9 +2,8 @@
 simulation runners for partitioned simulations.
 """
 
-import numpy as np
-
 import coupling_schemes as cs
+import numpy as np
 import timestepping as ts
 from oscillator import PartitionedOscillator
 

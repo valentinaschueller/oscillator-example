@@ -1,7 +1,6 @@
+import compute_trajectories as ct
 import numpy as np
 import pandas as pd
-
-import compute_trajectories as ct
 from utility import comment_meta_information
 
 if __name__ == "__main__":
