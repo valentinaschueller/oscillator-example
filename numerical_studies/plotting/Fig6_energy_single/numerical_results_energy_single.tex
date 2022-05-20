@@ -1,0 +1,40 @@
+\documentclass[../plot.tex]{subfiles}
+
+\providecommand{\resultsdir}{../../results}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+scale only axis,
+width=.4\textwidth,
+height=.4\textwidth,
+clip=false,
+tuftelike,
+xlabel={$u_1$},
+ylabel={$\dot{u}_1$},
+align=center,
+ymax = 15,
+ymin = -15,
+xmax = 2,
+xmin = -2,
+domain = 0:1,
+samples = 1000,
+legend style={at={(.5,.9)},anchor=south, draw=none,legend cell align=left,font=\scriptsize},
+]
+
+\addplot[black, dashed, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\addlegendentry{Analytical solution};
+
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_alpha_implicit-cps.csv};
+\addlegendentry{Generalized $\alpha$, implicit CPS, $T=5$, $\Delta t = 0.005$};
+
+\node[draw=red, fill=red, circle, inner sep=2pt, label={[label distance=-1mm]left:{\tiny$(u_1^0, \dot{u}_1^0)$}}] at (axis cs: 1, 0){};
+\draw[draw=red,thick,->](axis cs: 1,0) to[out=-90,in=75] (axis cs: 0.9136877,-5.6098608);
+\draw[draw=none]  (axis cs: -4, -15) rectangle (axis cs: 4, 15);  % use this as bounding box for alignment
+
+\end{axis}
+\end{tikzpicture}
+\end{document}

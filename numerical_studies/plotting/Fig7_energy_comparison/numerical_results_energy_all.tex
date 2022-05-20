@@ -1,0 +1,409 @@
+\documentclass[../plot.tex]{subfiles}
+
+\providecommand{\resultsdir}{../../results}
+
+\begin{document}
+\begin{tikzpicture}
+%%% Semi Implicit Euler
+\begin{axis}[
+name=plot11,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+axis x line*=top,
+xlabel={CSS},
+ylabel={SIE},
+%title={CSS, SIE},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_sie_css.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\end{axis}
+
+\begin{axis}[
+name=plot12,
+at={($(plot11.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%ylabel={$\dot{u}_1$},
+axis x line*=top,
+xlabel={CPS},
+%title={CPS, SIE},
+align=center,
+legend style={at={(.5,.9)},anchor=south, draw=none,legend cell align=left,font=\scriptsize},
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_sie_cps.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\end{axis}
+
+\begin{axis}[
+name=plot13,
+at={($(plot12.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+axis x line*=top,
+xlabel={implicit CPS},
+%title={implicit CPS, SIE},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_sie_implicit-cps.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+
+\end{axis}
+
+\begin{axis}[
+name=plot14,
+at={($(plot13.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+axis x line*=top,
+xlabel={Strang},
+%title={Strang, SIE},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_sie_strang.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\end{axis}
+
+\begin{axis}[
+name=plot15,
+at={($(plot14.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+axis x line*=top,
+xlabel={Waveform},
+%title={Waveform, SIE},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_sie_waveform.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\end{axis}
+
+%%% GENERALIZED ALPHA
+\begin{axis}[
+name=plot21,
+at={($(plot11.south)-(0,.05\textwidth)$)},anchor=north,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%title={CSS, gen.$\alpha$},
+ylabel={generalized $\alpha$},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_alpha_css.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\end{axis}
+
+\begin{axis}[
+name=plot22,
+at={($(plot21.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%ylabel={$\dot{u}_1$},
+%title={CPS, gen.$\alpha$},
+align=center,
+legend style={at={(.5,.9)},anchor=south, draw=none,legend cell align=left,font=\scriptsize},
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_alpha_cps.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\end{axis}
+
+\begin{axis}[
+name=plot23,
+at={($(plot22.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%title={implicit CPS, gen.$\alpha$},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_alpha_implicit-cps.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+
+\end{axis}
+
+\begin{axis}[
+name=plot24,
+at={($(plot23.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%title={Strang, gen.$\alpha$},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_alpha_strang.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+
+\end{axis}
+
+\begin{axis}[
+name=plot25,
+at={($(plot24.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%title={Waveform, gen.$\alpha$},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_alpha_waveform.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+
+\end{axis}
+
+%%% IMPLICIT MIDPOINT
+\begin{axis}[
+name=plot31,
+at={($(plot21.south)-(0,.05\textwidth)$)},anchor=north,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+ylabel={implicit midpoint},
+%title={CSS, impl. mid.},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_mid_css.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\end{axis}
+
+\begin{axis}[
+name=plot32,
+at={($(plot31.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%ylabel={$\dot{u}_1$},
+%title={CPS, impl. mid.},
+align=center,
+legend style={at={(.5,.9)},anchor=south, draw=none,legend cell align=left,font=\scriptsize},
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_mid_cps.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\end{axis}
+
+\begin{axis}[
+name=plot33,
+at={($(plot32.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%title={implicit CPS, impl. mid.},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_mid_implicit-cps.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+
+\end{axis}
+
+\begin{axis}[
+name=plot34,
+at={($(plot33.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%title={Strang, impl. mid.},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_mid_strang.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+
+\end{axis}
+
+\begin{axis}[
+name=plot35,
+at={($(plot34.east)+(.05\textwidth,0)$)},anchor=west,
+scale only axis,
+width=.15\textwidth,
+height=.15\textwidth,
+tuftelike,
+%title={Waveform, impl. mid.},
+align=center,
+%xmin=-2,
+%xmax=+2,
+%ymin=-12,
+%ymax=+12,
+x axis line style={draw=none},
+xmajorticks=false,
+y axis line style={draw=none},
+ymajorticks=false,
+]
+\addplot[blue] table[x=u1 , y=v1, col sep=comma]{\resultsdir/energy_mid_waveform.csv};
+\addplot[black, dashed,samples=100,domain=0:1, thick, no marks]
+( {0.5*cos(deg(2*pi*x))+0.5*cos(deg(6*pi*x))},
+  {-pi*sin(deg(2*pi*x))-3*pi*sin(deg(6*pi*x))}
+);
+\end{axis}
+\end{tikzpicture}
+\end{document}

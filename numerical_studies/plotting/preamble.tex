@@ -1,0 +1,84 @@
+\makeatletter
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
+\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+\DeclareOldFontCommand{\it}{\normalfont\itshape}{\mathit}
+\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\@nomath\sl}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}
+\makeatother
+
+\usepackage{authblk}
+\usepackage{subfiles}
+
+\usepackage{subfigure}
+\usepackage{xcolor}
+
+\usepackage{physics}
+\usepackage{textgreek}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{nicefrac}
+\usepackage[acronym]{glossaries}
+
+\usepackage[obeyFinal]{todonotes}
+\newcommand\todoin[2][]{\todo[inline, caption={2do}, #1]{\begin{minipage}{\textwidth-10pt}#2\end{minipage}}}
+\usepackage{amsmath}
+\newcommand\todoreviewhb[2][]{\todo[inline,color=blue!50,#1 author=HB]{#2}}
+\newcommand\todoreviewbu[2][]{\todo[inline,color=blue!50,#1 author=BU]{#2}}
+% for plotting
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing,patterns, arrows, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat = newest}
+
+\usepackage{pgfplots}
+\pgfkeys{/pgfplots/tuftelike/.style={
+		semithick,
+		tick style={major tick length=4pt,semithick,black},
+		separate axis lines,
+		axis x line*=bottom,
+		axis x line shift=10pt,
+		axis y line*=left,
+		axis y line shift=10pt}}
+
+\ifx\pdfoutput\undefined
+\usepackage[hypertex]{hyperref}
+\else
+\usepackage[pdftex,hypertexnames=false]{hyperref}
+\fi
+\newcommand{\algorithmautorefname}{Algorithm}  % needed for correct naming of algorithms
+\usepackage[noabbrev,nameinlink]{cleveref}
+\crefname{subsection}{subsection}{subsections} % needed for correct naming of subsections
+
+\definecolor{color1}{HTML}{008b8b}
+\definecolor{color2}{HTML}{808000}
+
+% for nicer plots
+\usepackage{pgfplots}
+\pgfkeys{/pgfplots/tuftelike/.style={
+  semithick,
+  tick style={major tick length=4pt,semithick,black},
+  separate axis lines,
+  axis x line*=bottom,
+  axis x line shift=10pt,
+  axis y line*=left,
+  axis y line shift=10pt}}
+
+% For properly referencing subfigures
+\newcommand{\subfigureautorefname}{\figureautorefname}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 	Acronyms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newacronym{ode}{ODE}{ordinary differential equation}
+
+\newacronym{pde}{PDE}{partial differential equation}
+
+\newacronym{dae}{DAE}{differential algebraic equation}
+
+\newacronym{fsi}{FSI}{fluid-structure interaction}
+
+\newacronym{cps}{CPS}{conventional parallel staggered}
+\newacronym{css}{CSS}{conventional serial staggered}

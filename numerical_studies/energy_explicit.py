@@ -31,9 +31,6 @@ if __name__ == "__main__":
             trajectory_df["u2"] = solution[1, ::sampling_frequency]
             trajectory_df["v1"] = solution[2, ::sampling_frequency]
             trajectory_df["v2"] = solution[3, ::sampling_frequency]
-            trajectory_df.to_csv(f"energy_{method_name}_{coupling_scheme}.csv")
-            comment_meta_information(
-                method_name + "_" + coupling_scheme,
-                __file__,
-                f"energy_{method_name}_{coupling_scheme}.csv",
-            )
+            filename = f"results/energy_{method_name}_{coupling_scheme}.csv"
+            trajectory_df.to_csv(filename)
+            comment_meta_information(method_name + "_" + coupling_scheme, __file__, filename)

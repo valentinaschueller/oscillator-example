@@ -1,0 +1,35 @@
+\documentclass[../plot.tex]{subfiles}
+
+\providecommand{\resultsdir}{../../results}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{loglogaxis}[
+scale only axis,
+width=.6\textwidth,
+height=4.5cm,
+clip=false,
+tuftelike,
+xlabel={$\Delta t$},
+ylabel={$||e||_\infty$},
+align=center,
+ymax = 1e3,
+ymin = 1e-10,
+xmin = 1e-4,
+legend style={at={(1,.47)},anchor=north west, draw=none,legend cell align=left,font=\scriptsize},
+]
+
+\addplot[mark=triangle,red,only marks] table[x=dt , y=error, col sep=comma]{\resultsdir/partitioned_mid_strang.csv};
+\addlegendentry{Strang splitting};
+
+
+\addplot[mark=triangle*, blue,only marks] table[x=dt , y=error, col sep=comma]{\resultsdir/partitioned_mid_waveform.csv};
+\addlegendentry{Waveform iterations};
+
+\draw[dashed] (axis cs:0.0001,0.00000625) -- node[right, at end]{$\mathcal{O}(\Delta t^2)$} (axis cs:.04,1);
+
+\draw[draw=none]  (axis cs: .1e-3, 1e-10) rectangle (axis cs: .5, 1e2);  % use this as bounding box for alignment
+
+\end{loglogaxis}
+\end{tikzpicture}
+\end{document}

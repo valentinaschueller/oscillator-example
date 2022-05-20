@@ -1,0 +1,47 @@
+\documentclass[../plot.tex]{subfiles}
+
+\providecommand{\resultsdir}{../../results}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{loglogaxis}[
+scale only axis,
+width=.6\textwidth,
+height=4.5cm,
+clip=false,
+tuftelike,
+xlabel={$\Delta t$},
+ylabel={$||e||_\infty$},
+align=center,
+ymax = 1e3,
+ymin = 1e-10,
+xmin = 1e-4,
+legend style={at={(1,.47)},anchor=north west, draw=none,legend cell align=left,font=\scriptsize},
+]
+
+\addplot[mark=x,blue,only marks] table[x=dt , y=error, col sep=comma]{\resultsdir/partitioned_sie_strang.csv};
+\addlegendentry{SIE};
+
+\addplot[mark=star,only marks,blue] table[x=dt , y=error, col sep=comma]{\resultsdir/partitioned_newmark_strang.csv};
+\addlegendentry{Newmark-$\beta$};
+
+\addplot[mark=o,blue,only marks] table[x=dt , y=error, col sep=comma]{\resultsdir/partitioned_alpha_strang.csv};
+\addlegendentry{generalized-$\alpha$};
+
+\addplot[mark=triangle,blue,only marks] table[x=dt , y=error, col sep=comma]{\resultsdir/partitioned_mid_strang.csv};
+\addlegendentry{Impl. midpoint};
+
+\addplot[mark=square,blue,only marks] table[x=dt , y=error, col sep=comma]{\resultsdir/partitioned_erk4_strang.csv};
+\addlegendentry{ERK4};
+
+\draw[] (axis cs:0.0001,0.05) -- node[right, at end]{$\mathcal{O}(\Delta t)$} (axis cs:.04,20);
+
+\draw[dashed] (axis cs:0.0001,0.00000625) -- node[right, at end]{$\mathcal{O}(\Delta t^2)$} (axis cs:.04,1);
+
+\draw[dotted] (axis cs:0.0002,1.25e-11) -- node[right, at end]{$\mathcal{O}(\Delta t^4)$} (axis cs:.04,.02);
+
+\draw[draw=none]  (axis cs: .1e-3, 1e-10) rectangle (axis cs: .5, 1e2);  % use this as bounding box for alignment
+
+\end{loglogaxis}
+\end{tikzpicture}
+\end{document}

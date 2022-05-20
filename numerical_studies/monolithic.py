@@ -98,5 +98,6 @@ if __name__ == "__main__":
         errors_df["error"] = np.array(
             [max_norm(compute_simulation_error(t_stop, N, method_name)) for N in N_list]
         )
-        errors_df.to_csv(f"monolithic_{method_name}.csv")
-        comment_meta_information(method_name, __file__, f"monolithic_{method_name}.csv")
+        filename = f"results/monolithic_{method_name}.csv"
+        errors_df.to_csv(filename)
+        comment_meta_information(method_name, __file__, filename)

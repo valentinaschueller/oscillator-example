@@ -40,9 +40,6 @@ if __name__ == "__main__":
                 for N in N_list
             ]
         )
-        errors_df.to_csv(f"partitioned_{method_name}_waveform.csv")
-        comment_meta_information(
-            method_name + "_waveform",
-            __file__,
-            f"partitioned_{method_name}_waveform.csv",
-        )
+        filename = f"results/partitioned_{method_name}_waveform.csv"
+        errors_df.to_csv(filename)
+        comment_meta_information(method_name + "_waveform", __file__, filename)

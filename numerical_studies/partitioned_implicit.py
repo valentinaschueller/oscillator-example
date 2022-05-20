@@ -39,9 +39,6 @@ if __name__ == "__main__":
                 for N in N_list
             ]
         )
-        errors_df.to_csv(f"partitioned_{method_name}_{coupling_scheme}.csv")
-        comment_meta_information(
-            method_name + "_" + coupling_scheme,
-            __file__,
-            f"partitioned_{method_name}_{coupling_scheme}.csv",
-        )
+        filename = f"results/partitioned_{method_name}_{coupling_scheme}.csv"
+        errors_df.to_csv(filename)
+        comment_meta_information(method_name + "_" + coupling_scheme, __file__, filename)
