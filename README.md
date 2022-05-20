@@ -1,7 +1,7 @@
 # Oscillator Example
 
 Python implementation for the oscillator example for partitioned simulations
-This repository can be used to understand and reproduce the results of our paper: 
+This repository can be used to understand and reproduce the results of our paper:
 "A Simple Mass-Spring Test Case for Convergence Order in Time and Energy Conservation of Black-Box Coupling Schemes"
 
 
@@ -9,7 +9,7 @@ This repository can be used to understand and reproduce the results of our paper
 
 ### Requirements
 
-- required packages: 
+- required packages:
   - NumPy (we used version 1.21.2)
   - Matplotlib (we used version 3.4.3)
   - Pandas (we used version 1.3.5)
@@ -26,3 +26,22 @@ $ conda env update --file conda_environment.yml --name your_env_name
 
 **Warning: This code was not primarily meant for further development.**
 If you really want to use this for anything besides reproducing the results, [please reach out to us.](mailto:valentina.schueller@tum.de).
+
+### Running and generating results
+
+This repository provides scripts to run the experiments from the paper in the folder `numerical_studies`. The following scripts are provided:
+
+* `partitioned_explicit.py`
+* `partitioned_implicit.py`
+* `partitioned_strang.py`
+* `partitioned_waveform.py`
+* `energy_explicit.py`
+* `energy_implicit.py`
+* `energy_strang.py`
+* `energy_waveform.py`
+
+Each of these scripts can be run by executing `python3 <name of script>.py` from the terminal. This will create `.csv` files containing the results in the folder `numerical_studies/results`.
+
+### Postprocessing of the results
+
+To postprocess the results from `numerical_studies/results`, you can compile the latex files that are provided in subfolders of `numerical_studies/plotting`. The subfolders are named according to the figures from the paper.
