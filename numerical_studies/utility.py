@@ -118,7 +118,7 @@ def comment_meta_information(experiment_name, runner, file_path):
         f"# git repo: {repourl}\n"
         f"# git commit: {chash}\n"
         f"# experiment: {experiment_name}\n"
-        f"# runner: {runner}"
+        f"# runner: {runner}\n"
     )
 
     with open(file_path, "r") as original:
