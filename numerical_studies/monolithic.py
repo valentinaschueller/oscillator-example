@@ -3,7 +3,7 @@ import pandas as pd
 from oscillator import MonolithicOscillator
 from timestepping import (ERK, GeneralizedAlpha, ImplicitMidpoint, NewmarkBeta,
                           SemiImplicitEuler)
-from utility import comment_meta_information, max_norm
+from utility import comment_meta_information, max_norm, l2_norm
 
 
 def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
@@ -83,20 +83,25 @@ if __name__ == "__main__":
     Runs monolithic experiment for oscillator example with different time stepping schemes.
     Performs convergence study and outputs error w.r.t analytical solution.
     """
-    # t_stop = 20
-    # N_list = np.array([125, 250, 500, 1000, 2000, 4000, 8000])
     t_stop = 1
-    N_list = np.array([25, 50, 100, 200, 400, 800, 1600, 3200, 6400])
+    N_list = np.array([25 * 2**i for i in range(9)])
     dt_list = np.array([t_stop / N for N in N_list])
 
     # prepare dataframe for saving
     errors_df = pd.DataFrame(index=dt_list)
     errors_df.index.name = "dt"
+    use_norm = "max_norm"
+
+    if use_norm == "max_norm":
+        norm = max_norm
+    elif use_norm == "l2_norm":
+        norm = l2_norm
 
     method_names = ["newmark", "alpha", "erk4", "sie", "mid"]
     for method_name in method_names:
+        print(method_name)
         errors_df["error"] = np.array(
-            [max_norm(compute_simulation_error(t_stop, N, method_name)) for N in N_list]
+            [norm(compute_simulation_error(t_stop, N, method_name)) for N in N_list]
         )
         filename = f"results/monolithic_{method_name}.csv"
         errors_df.to_csv(filename)

@@ -1,22 +1,26 @@
 import compute_partitioned_errors as cpe
 import numpy as np
 import pandas as pd
-from utility import comment_meta_information, max_norm
+from utility import comment_meta_information, max_norm, l2_norm
 
 if __name__ == "__main__":
     """
     Runs partitioned experiment for oscillator example with different time stepping schemes using implicit coupling scheme (fixed-point CPS).
     Performs convergence study and outputs error w.r.t analytical solution.
     """
-    # t_stop = 20
-    # N_list = np.array([125, 250, 500, 1000, 2000, 4000, 8000])
     t_stop = 1
-    N_list = np.array([25, 50, 100, 200, 400, 800, 1600, 3200, 6400])
+    N_list = np.array([25 * 2**i for i in range(9)])
     dt_list = np.array([t_stop / N for N in N_list])
 
     # prepare dataframe for saving
     errors_df = pd.DataFrame(index=dt_list)
     errors_df.index.name = "dt"
+    use_norm = "max_norm"
+
+    if use_norm == "max_norm":
+        norm = max_norm
+    elif use_norm == "l2_norm":
+        norm = l2_norm
 
     method_name_and_func = {
         "newmark": cpe.compute_newmark_error,
@@ -29,7 +33,7 @@ if __name__ == "__main__":
     for method_name, method_func in method_name_and_func.items():
         errors_df["error"] = np.array(
             [
-                max_norm(
+                norm(
                     method_func(
                         t_stop,
                         N,

@@ -80,14 +80,14 @@ def l2_norm(vec: np.ndarray) -> float:
     """
     computes the L2-norm (Euclidian norm) of the input vector
     """
-    return np.sqrt(np.sum(vec**2))
+    return np.sqrt(np.sum(vec[0:2, -1]**2)) / vec[0:2, -1].size
 
 
 def max_norm(vec: np.ndarray) -> float:
     """
     computes the maximum norm (infinity norm) of the input vector
     """
-    return np.max(np.abs(vec))
+    return np.max(np.abs(vec[0:2, :]))
 
 
 def interpolate_linear(
