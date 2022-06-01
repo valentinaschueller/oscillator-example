@@ -1,7 +1,7 @@
 import compute_partitioned_errors as cpe
 import numpy as np
 import pandas as pd
-from utility import comment_meta_information, l2_norm, max_norm
+from utility import comment_meta_information, l2_norm_normalized, max_norm
 
 if __name__ == "__main__":
     """
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     if use_norm == "max_norm":
         norm = max_norm
     elif use_norm == "l2_norm":
-        norm = l2_norm
+        norm = l2_norm_normalized
 
     method_name_and_func = {
         "newmark": cpe.compute_newmark_error,

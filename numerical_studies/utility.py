@@ -80,6 +80,13 @@ def l2_norm(vec: np.ndarray) -> float:
     """
     computes the L2-norm (Euclidian norm) of the input vector
     """
+    return np.sqrt(np.sum(vec**2))
+
+
+def l2_norm_normalized(vec: np.ndarray) -> float:
+    """
+    computes the L2-norm (Euclidian norm) of the input vector
+    """
     return np.sqrt(np.sum(vec[0:2, -1]**2)) / vec[0:2, -1].size
 
 

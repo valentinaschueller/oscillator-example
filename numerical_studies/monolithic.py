@@ -3,7 +3,7 @@ import pandas as pd
 from oscillator import MonolithicOscillator
 from timestepping import (ERK, GeneralizedAlpha, ImplicitMidpoint, NewmarkBeta,
                           SemiImplicitEuler)
-from utility import comment_meta_information, l2_norm, max_norm
+from utility import comment_meta_information, l2_norm_normalized, max_norm
 
 
 def run_simulation(t_stop: int, N: float, solver_str: str = "newmark"):
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     if use_norm == "max_norm":
         norm = max_norm
     elif use_norm == "l2_norm":
-        norm = l2_norm
+        norm = l2_norm_normalized
 
     method_names = ["newmark", "alpha", "erk4", "sie", "mid"]
     for method_name in method_names:
