@@ -2,7 +2,7 @@
 
 Python implementation for the oscillator example for partitioned simulations
 This repository can be used to understand and reproduce the results of our paper:
-"A Simple Mass-Spring Test Case for Convergence Order in Time and Energy Conservation of Black-Box Coupling Schemes"
+"A Simple Test Case for Convergence Order in Time and Energy Conservation of Black-Box Coupling Schemes"
 
 
 ## Notes on the code
@@ -25,7 +25,7 @@ $ conda env update --file conda_environment.yml --name your_env_name
 ```
 
 **Warning: This code was not primarily meant for further development.**
-If you really want to use this for anything besides reproducing the results, [please reach out to us.](mailto:valentina.schueller@tum.de).
+If you really want to use this for anything besides reproducing the results, [please reach out to us.](mailto:valentina.schueller@tum.de)
 
 ### Running and generating results
 
